@@ -1,0 +1,329 @@
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local G2L = {}
+
+G2L.Root = Instance.new("ScreenGui")
+G2L.Root.Name = "TradeScam"
+G2L.Root.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+G2L.Root.ResetOnSpawn = false
+G2L.Root.IgnoreGuiInset = true
+G2L.Root.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+G2L.Main = Instance.new("Frame")
+G2L.Main.Name = "Main"
+G2L.Main.Size = UDim2.new(0, 340, 0, 360)
+G2L.Main.Position = UDim2.new(0.5, -170, 0.5, -180)
+G2L.Main.BackgroundColor3 = Color3.fromRGB(8, 8, 14)
+G2L.Main.BorderSizePixel = 0
+G2L.Main.ClipsDescendants = false
+G2L.Main.Parent = G2L.Root
+Instance.new("UICorner", G2L.Main).CornerRadius = UDim.new(0, 18)
+
+local mainStroke = Instance.new("UIStroke", G2L.Main)
+mainStroke.Thickness = 1.5
+mainStroke.Color = Color3.fromRGB(80, 40, 255)
+mainStroke.Transparency = 0.35
+
+G2L.Sheen = Instance.new("Frame", G2L.Main)
+G2L.Sheen.Size = UDim2.new(1, 0, 0.45, 0)
+G2L.Sheen.BackgroundColor3 = Color3.fromRGB(120, 80, 255)
+G2L.Sheen.BackgroundTransparency = 0.93
+G2L.Sheen.BorderSizePixel = 0
+G2L.Sheen.ZIndex = 0
+Instance.new("UICorner", G2L.Sheen).CornerRadius = UDim.new(0, 18)
+
+G2L.Scanlines = Instance.new("Frame", G2L.Main)
+G2L.Scanlines.Size = UDim2.new(1, 0, 1, 0)
+G2L.Scanlines.BackgroundTransparency = 1
+G2L.Scanlines.BorderSizePixel = 0
+G2L.Scanlines.ZIndex = 10
+G2L.Scanlines.ClipsDescendants = true
+Instance.new("UICorner", G2L.Scanlines).CornerRadius = UDim.new(0, 18)
+do
+	local grid = Instance.new("UIGridLayout", G2L.Scanlines)
+	grid.CellSize = UDim2.new(1, 0, 0, 2)
+	grid.CellPadding = UDim2.new(0, 0, 0, 2)
+	grid.SortOrder = Enum.SortOrder.LayoutOrder
+	for _ = 1, 90 do
+		local line = Instance.new("Frame", G2L.Scanlines)
+		line.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		line.BackgroundTransparency = 0.93
+		line.BorderSizePixel = 0
+		line.ZIndex = 10
+	end
+end
+
+G2L.Header = Instance.new("Frame", G2L.Main)
+G2L.Header.Name = "Header"
+G2L.Header.Size = UDim2.new(1, 0, 0, 62)
+G2L.Header.BackgroundColor3 = Color3.fromRGB(14, 10, 28)
+G2L.Header.BorderSizePixel = 0
+G2L.Header.ZIndex = 2
+Instance.new("UICorner", G2L.Header).CornerRadius = UDim.new(0, 18)
+
+local hFix = Instance.new("Frame", G2L.Header)
+hFix.Size = UDim2.new(1, 0, 0.5, 0)
+hFix.Position = UDim2.new(0, 0, 0.5, 0)
+hFix.BackgroundColor3 = Color3.fromRGB(14, 10, 28)
+hFix.BorderSizePixel = 0
+hFix.ZIndex = 2
+
+G2L.AccentBar = Instance.new("Frame", G2L.Header)
+G2L.AccentBar.Size = UDim2.new(0, 80, 0, 3)
+G2L.AccentBar.Position = UDim2.new(0, 16, 0, 0)
+G2L.AccentBar.BackgroundColor3 = Color3.fromRGB(120, 60, 255)
+G2L.AccentBar.BorderSizePixel = 0
+G2L.AccentBar.ZIndex = 5
+Instance.new("UICorner", G2L.AccentBar).CornerRadius = UDim.new(0, 4)
+do
+	local ag = Instance.new("UIGradient", G2L.AccentBar)
+	ag.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 0, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 200, 255)),
+	}
+end
+
+G2L.Dot = Instance.new("Frame", G2L.Header)
+G2L.Dot.Size = UDim2.new(0, 8, 0, 8)
+G2L.Dot.Position = UDim2.new(0, 18, 0.5, -4)
+G2L.Dot.BackgroundColor3 = Color3.fromRGB(120, 60, 255)
+G2L.Dot.BorderSizePixel = 0
+G2L.Dot.ZIndex = 4
+Instance.new("UICorner", G2L.Dot).CornerRadius = UDim.new(1, 0)
+
+G2L.Title = Instance.new("TextLabel", G2L.Header)
+G2L.Title.Size = UDim2.new(0, 200, 1, 0)
+G2L.Title.Position = UDim2.new(0, 34, 0, 0)
+G2L.Title.BackgroundTransparency = 1
+G2L.Title.Font = Enum.Font.GothamBlack
+G2L.Title.Text = "TRADE SCAM"
+G2L.Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L.Title.TextSize = 17
+G2L.Title.TextXAlignment = Enum.TextXAlignment.Left
+G2L.Title.ZIndex = 4
+do
+	local tg = Instance.new("UIGradient", G2L.Title)
+	tg.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(160, 120, 255)),
+	}
+end
+
+G2L.Badge = Instance.new("Frame", G2L.Header)
+G2L.Badge.Size = UDim2.new(0, 46, 0, 22)
+G2L.Badge.Position = UDim2.new(1, -58, 0.5, -11)
+G2L.Badge.BackgroundColor3 = Color3.fromRGB(80, 40, 180)
+G2L.Badge.BackgroundTransparency = 0.5
+G2L.Badge.BorderSizePixel = 0
+G2L.Badge.ZIndex = 4
+Instance.new("UICorner", G2L.Badge).CornerRadius = UDim.new(0, 6)
+local badgeStroke = Instance.new("UIStroke", G2L.Badge)
+badgeStroke.Color = Color3.fromRGB(130, 80, 255)
+badgeStroke.Thickness = 1
+badgeStroke.Transparency = 0.3
+
+local badgeText = Instance.new("TextLabel", G2L.Badge)
+badgeText.Size = UDim2.new(1, 0, 1, 0)
+badgeText.BackgroundTransparency = 1
+badgeText.Font = Enum.Font.GothamBold
+badgeText.Text = "v1.0"
+badgeText.TextColor3 = Color3.fromRGB(200, 180, 255)
+badgeText.TextSize = 11
+badgeText.ZIndex = 5
+
+G2L.Divider = Instance.new("Frame", G2L.Main)
+G2L.Divider.Size = UDim2.new(1, -48, 0, 1)
+G2L.Divider.Position = UDim2.new(0, 24, 0, 70)
+G2L.Divider.BorderSizePixel = 0
+G2L.Divider.ZIndex = 3
+do
+	local dg = Instance.new("UIGradient", G2L.Divider)
+	dg.Color = ColorSequence.new{
+		ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 8, 14)),
+		ColorSequenceKeypoint.new(0.30, Color3.fromRGB(100, 60, 255)),
+		ColorSequenceKeypoint.new(0.70, Color3.fromRGB(0, 180, 255)),
+		ColorSequenceKeypoint.new(1.00, Color3.fromRGB(8, 8, 14)),
+	}
+end
+
+local btnDefs = {
+	{
+		name  = "ForceAccept",
+		label = "FORCE ACCEPT",
+		sub   = "bypass trade confirmation",
+		icon  = "◈",
+		base  = Color3.fromRGB(0, 160, 220),
+		glow  = Color3.fromRGB(0, 210, 255),
+		posY  = 88,
+	},
+	{
+		name  = "FreezeVictim",
+		label = "FREEZE VICTIM",
+		sub   = "lock target in place",
+		icon  = "◈",
+		base  = Color3.fromRGB(190, 30, 45),
+		glow  = Color3.fromRGB(255, 60, 75),
+		posY  = 172,
+	},
+	{
+		name  = "ForceGive",
+		label = "FORCE GIVE BRAINROT",
+		sub   = "push all items instantly",
+		icon  = "◈",
+		base  = Color3.fromRGB(90, 20, 200),
+		glow  = Color3.fromRGB(150, 70, 255),
+		posY  = 256,
+	},
+}
+
+for _, def in ipairs(btnDefs) do
+	local card = Instance.new("Frame", G2L.Main)
+	card.Name = def.name .. "Card"
+	card.Size = UDim2.new(0, 292, 0, 64)
+	card.Position = UDim2.new(0.5, -146, 0, def.posY)
+	card.BackgroundColor3 = Color3.fromRGB(16, 12, 30)
+	card.BorderSizePixel = 0
+	card.ZIndex = 3
+	Instance.new("UICorner", card).CornerRadius = UDim.new(0, 12)
+
+	local cardStroke = Instance.new("UIStroke", card)
+	cardStroke.Thickness = 1.2
+	cardStroke.Color = def.base
+	cardStroke.Transparency = 0.55
+
+	local stripe = Instance.new("Frame", card)
+	stripe.Size = UDim2.new(0, 3, 0.65, 0)
+	stripe.Position = UDim2.new(0, 10, 0.175, 0)
+	stripe.BackgroundColor3 = def.glow
+	stripe.BorderSizePixel = 0
+	stripe.ZIndex = 4
+	Instance.new("UICorner", stripe).CornerRadius = UDim.new(0, 4)
+
+	local icon = Instance.new("TextLabel", card)
+	icon.Size = UDim2.new(0, 36, 1, 0)
+	icon.Position = UDim2.new(0, 20, 0, 0)
+	icon.BackgroundTransparency = 1
+	icon.Font = Enum.Font.GothamBold
+	icon.Text = def.icon
+	icon.TextColor3 = def.glow
+	icon.TextSize = 22
+	icon.ZIndex = 4
+
+	local lbl = Instance.new("TextLabel", card)
+	lbl.Size = UDim2.new(0, 210, 0, 28)
+	lbl.Position = UDim2.new(0, 58, 0, 10)
+	lbl.BackgroundTransparency = 1
+	lbl.Font = Enum.Font.GothamBlack
+	lbl.Text = def.label
+	lbl.TextColor3 = Color3.fromRGB(240, 235, 255)
+	lbl.TextSize = 14
+	lbl.TextXAlignment = Enum.TextXAlignment.Left
+	lbl.ZIndex = 4
+
+	local sub = Instance.new("TextLabel", card)
+	sub.Size = UDim2.new(0, 210, 0, 18)
+	sub.Position = UDim2.new(0, 58, 0, 36)
+	sub.BackgroundTransparency = 1
+	sub.Font = Enum.Font.Gotham
+	sub.Text = def.sub
+	sub.TextColor3 = Color3.fromRGB(120, 110, 160)
+	sub.TextSize = 11
+	sub.TextXAlignment = Enum.TextXAlignment.Left
+	sub.ZIndex = 4
+
+	local btn = Instance.new("TextButton", card)
+	btn.Name = def.name
+	btn.Size = UDim2.new(1, 0, 1, 0)
+	btn.BackgroundTransparency = 1
+	btn.Text = ""
+	btn.ZIndex = 6
+
+	btn.MouseEnter:Connect(function()
+		TweenService:Create(card, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(24, 18, 46)}):Play()
+		TweenService:Create(cardStroke, TweenInfo.new(0.15), {Transparency = 0.1}):Play()
+	end)
+	btn.MouseLeave:Connect(function()
+		TweenService:Create(card, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = Color3.fromRGB(16, 12, 30)}):Play()
+		TweenService:Create(cardStroke, TweenInfo.new(0.2), {Transparency = 0.55}):Play()
+	end)
+	btn.MouseButton1Click:Connect(function()
+		TweenService:Create(card, TweenInfo.new(0.07), {BackgroundColor3 = Color3.lerp(Color3.fromRGB(16,12,30), def.glow, 0.25)}):Play()
+		task.delay(0.1, function()
+			TweenService:Create(card, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(16, 12, 30)}):Play()
+		end)
+	end)
+
+	G2L[def.name] = btn
+end
+
+do
+	local dragging = false
+	local dragInput, dragStart, startPos
+
+	local function updateDrag(input)
+		local delta = input.Position - dragStart
+		local newPos = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+		TweenService:Create(G2L.Main, TweenInfo.new(0.08, Enum.EasingStyle.Linear), {Position = newPos}):Play()
+	end
+
+	G2L.Header.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = G2L.Main.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+
+	G2L.Header.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement
+			or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+
+	UIS.InputChanged:Connect(function(input)
+		if dragging and input == dragInput then
+			updateDrag(input)
+		end
+	end)
+end
+
+G2L.Main.Size = UDim2.new(0, 0, 0, 0)
+G2L.Main.BackgroundTransparency = 1
+TweenService:Create(G2L.Main, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+	Size = UDim2.new(0, 340, 0, 360),
+	BackgroundTransparency = 0,
+}):Play()
+
+task.spawn(function()
+	while G2L.Root.Parent do
+		TweenService:Create(G2L.AccentBar, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 120, 0, 3)}):Play()
+		task.wait(1.4)
+		TweenService:Create(G2L.AccentBar, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Size = UDim2.new(0, 60, 0, 3)}):Play()
+		task.wait(1.4)
+	end
+end)
+
+task.spawn(function()
+	while G2L.Root.Parent do
+		TweenService:Create(G2L.Dot, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(0, 200, 255)}):Play()
+		task.wait(0.9)
+		TweenService:Create(G2L.Dot, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {BackgroundColor3 = Color3.fromRGB(120, 60, 255)}):Play()
+		task.wait(0.9)
+	end
+end)
+
+return G2L.Root
