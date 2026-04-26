@@ -1,0 +1,43 @@
+-- open src auto accept trade in sab (accepts all the trades blindly, your base may get full fast if low threshold)
+
+print("successfully loaded")
+task.delay(5, function()
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local container = player.PlayerGui.DuelsMachinePrompt.DuelsMachinePrompt
+    local function clickYes(prompt)
+        warn(4)
+        local yesButton = prompt:FindFirstChild("Yes", true)
+        if yesButton then
+            if firesignal then
+                warn(5)
+                firesignal(yesButton.Activated)
+            else
+                warn(6)
+                local VirtualInputManager = game:GetService("VirtualInputManager")
+                local pos = yesButton.AbsolutePosition + (yesButton.AbsoluteSize / 2)
+                VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, true, game, 1)
+                VirtualInputManager:SendMouseButtonEvent(pos.X, pos.Y, 0, false, game, 1)
+            end
+        end
+    end
+    local function Accept()
+        firesignal(player.PlayerGui.TradeLiveTrade.TradeLiveTrade.Other.ReadyButton.Activated)
+    end
+    task.spawn(function()
+        while task.wait(0.5) do
+            Accept()
+        end
+    end)
+    container.ChildAdded:Connect(function(child)
+        if child.Name == "Prompt" then
+            warn(1)
+            local label = child:FindFirstChild("Label", true)
+            warn(2)
+            if label and label.Text == "Trade Request" then
+                warn(3)
+                clickYes(child)
+            end
+        end
+    end)
+end)
