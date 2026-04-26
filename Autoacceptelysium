@@ -1,5 +1,3 @@
--- open src auto accept trade in sab (accepts all the trades blindly, your base may get full fast if low threshold)
-
 print("successfully loaded")
 task.delay(5, function()
     local Players = game:GetService("Players")
