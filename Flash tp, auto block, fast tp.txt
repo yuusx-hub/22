@@ -1,0 +1,589 @@
+local Players                = game:GetService("Players")
+local UserInputService       = game:GetService("UserInputService")
+local ProximityPromptService = game:GetService("ProximityPromptService")
+local VirtualInputManager    = game:GetService("VirtualInputManager")
+local StarterGui             = game:GetService("StarterGui")
+local TweenService           = game:GetService("TweenService")
+local RunService             = game:GetService("RunService")
+local Stats                  = game:GetService("Stats")
+local CoreGui                = game:GetService("CoreGui")
+
+
+
+local Player = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+local CFG = {
+    InvisTool   = "Invisibility Cloak",
+    TpDelay     = 0.01,
+    SafetyDelay = 0.2,
+    DefaultKey  = Enum.KeyCode.T,
+    Waypoints   = {
+     Vector3.new(-357.30, -7.00, 113.60),
+     Vector3.new(-381.00, -7.00, -43.50),
+     Vector3.new(-412.43, -6.50, 102.23),
+     Vector3.new(-411.05, -6.50, 54.73),
+     Vector3.new(-410.00, -6.50, -14.58),
+     Vector3.new(-377.28, -7.00, 14.31),
+     Vector3.new(-345.77, -7.00, 17.01),
+     Vector3.new(-332.52, -4.79, 18.41)
+    },
+    POS_CARPET      = Vector3.new(-332, -7, 67),
+    POS_FLASH_TARGET = Vector3.new(-331.8, -4.7, 27.5),
+}
+
+local C = {
+    Base       = Color3.fromRGB(9,   7,  15),
+    Surface    = Color3.fromRGB(15, 11, 24),
+    SurfaceHi  = Color3.fromRGB(22, 16, 38),
+    Glass      = Color3.fromRGB(32, 22, 52),
+    Violet     = Color3.fromRGB(130, 40, 220),
+    VioletBri  = Color3.fromRGB(175, 85, 255),
+    VioletGlow = Color3.fromRGB(210, 148, 255),
+    VioletDim  = Color3.fromRGB(60,  18, 110),
+    Indigo     = Color3.fromRGB(68,   0, 200),
+    White      = Color3.fromRGB(245, 240, 255),
+    Silver     = Color3.fromRGB(175, 165, 198),
+    Muted      = Color3.fromRGB(95,  80, 125),
+    Green      = Color3.fromRGB(72, 255, 155),
+    Red        = Color3.fromRGB(255, 65, 95),
+    RedDim     = Color3.fromRGB(115, 22, 42),
+    Gold       = Color3.fromRGB(255, 198, 70),
+    GoldDim    = Color3.fromRGB(100, 78, 14),
+    Orange     = Color3.fromRGB(255, 150, 50),
+    OrangeDim  = Color3.fromRGB(100, 55, 10),
+    BarBg      = Color3.fromRGB(7,   5,  13),
+}
+
+local State = {
+    AutoBlock   = false,
+    QuickAccess = false,
+    InvisFinish = false,
+    Running     = false,
+    Binding     = false,
+    PanelOpen   = true,
+    Keybind     = CFG.DefaultKey,
+}
+
+local function T(obj, t, props, style, dir)
+    style = style or Enum.EasingStyle.Quint
+    dir   = dir   or Enum.EasingDirection.Out
+    TweenService:Create(obj, TweenInfo.new(t, style, dir), props):Play()
+end
+local function Loop(obj, t, props)
+    TweenService:Create(obj, TweenInfo.new(t, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), props):Play()
+end
+local function After(s, fn) task.delay(s, fn) end
+
+if CoreGui:FindFirstChild("706_UI") then CoreGui:FindFirstChild("706_UI"):Destroy() end
+
+local Root = Instance.new("ScreenGui")
+Root.Name           = "706_UI"
+Root.ResetOnSpawn   = false
+Root.IgnoreGuiInset = true
+Root.DisplayOrder   = 200
+Root.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Root.Parent         = CoreGui
+
+local function Fr(parent, props)
+    local f = Instance.new("Frame")
+    f.BackgroundColor3 = C.Surface; f.BorderSizePixel = 0; f.BackgroundTransparency = 0
+    for k,v in pairs(props or {}) do f[k]=v end; f.Parent=parent; return f
+end
+local function Co(p,r) local c=Instance.new("UICorner",p); c.CornerRadius=UDim.new(0,r or 10); return c end
+local function St(p,col,th,tr) local s=Instance.new("UIStroke",p); s.Color=col or C.Violet; s.Thickness=th or 1; s.Transparency=tr or 0; return s end
+local function Lb(parent, props)
+    local l=Instance.new("TextLabel"); l.BackgroundTransparency=1
+    l.Font=Enum.Font.GothamBold; l.TextColor3=C.White; l.TextSize=13
+    l.TextXAlignment=Enum.TextXAlignment.Left
+    for k,v in pairs(props or {}) do l[k]=v end; l.Parent=parent; return l
+end
+local function Bt(parent, props)
+    local b=Instance.new("TextButton"); b.BackgroundColor3=C.SurfaceHi; b.BorderSizePixel=0
+    b.Font=Enum.Font.GothamBold; b.TextColor3=C.Silver; b.TextSize=12; b.AutoButtonColor=false
+    for k,v in pairs(props or {}) do b[k]=v end; b.Parent=parent; return b
+end
+local function Interact(b, hov, prs, orig)
+    orig=orig or b.BackgroundColor3; hov=hov or C.SurfaceHi; prs=prs or C.Glass
+    local os=b.Size
+    b.MouseEnter:Connect(function() T(b,.13,{BackgroundColor3=hov}) end)
+    b.MouseLeave:Connect(function() T(b,.13,{BackgroundColor3=orig}); T(b,.11,{Size=os},Enum.EasingStyle.Back) end)
+    b.MouseButton1Down:Connect(function() T(b,.07,{BackgroundColor3=prs,Size=UDim2.new(os.X.Scale,os.X.Offset,os.Y.Scale,os.Y.Offset-2)}) end)
+    b.MouseButton1Up:Connect(function() T(b,.11,{BackgroundColor3=hov,Size=os},Enum.EasingStyle.Back) end)
+end
+
+local PW, PH = 215, 345
+
+local Panel = Fr(Root, {
+    Size=UDim2.new(0,PW,0,0),
+    Position=UDim2.new(0,12,0.5,-(PH/2)),
+    BackgroundColor3=C.Base, BackgroundTransparency=0.04,
+    ClipsDescendants=true, ZIndex=10,
+})
+Co(Panel,14)
+local panelStroke = St(Panel,C.Violet,1.3,0.45)
+Loop(panelStroke, 3, {Color=C.VioletBri, Transparency=0.1})
+
+local g1=Fr(Panel,{Size=UDim2.new(0,120,0,120),Position=UDim2.new(0,-30,0,-40),BackgroundColor3=C.Indigo,BackgroundTransparency=0.62,ZIndex=10}); Co(g1,60)
+local g2=Fr(Panel,{Size=UDim2.new(0,75,0,75),Position=UDim2.new(1,-50,1,-45),BackgroundColor3=C.VioletDim,BackgroundTransparency=0.7,ZIndex=10}); Co(g2,38)
+
+local shimBar=Fr(Panel,{Size=UDim2.new(0.4,0,0,1),Position=UDim2.new(0.3,0,0,0),BackgroundColor3=C.VioletBri,ZIndex=12}); Co(shimBar,1)
+Loop(shimBar,2.4,{BackgroundColor3=C.VioletGlow,Size=UDim2.new(0.72,0,0,1),Position=UDim2.new(0.14,0,0,0)})
+
+local Content = Fr(Panel,{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,ZIndex=11})
+local UP=Instance.new("UIPadding",Content)
+UP.PaddingLeft=UDim.new(0,12); UP.PaddingRight=UDim.new(0,12)
+UP.PaddingTop=UDim.new(0,12);  UP.PaddingBottom=UDim.new(0,10)
+local UL=Instance.new("UIListLayout",Content)
+UL.SortOrder=Enum.SortOrder.LayoutOrder; UL.Padding=UDim.new(0,6)
+UL.HorizontalAlignment=Enum.HorizontalAlignment.Left
+UL.FillDirection=Enum.FillDirection.Vertical
+
+local Header = Fr(Content,{Size=UDim2.new(1,0,0,38),BackgroundTransparency=1,LayoutOrder=1,ZIndex=12})
+
+local MainTitle = Lb(Header, {
+    Size=UDim2.new(1,-34,1,0), Position=UDim2.new(0,0,0,0),
+    Text="706  Auto Block",
+    Font=Enum.Font.GothamBlack, TextColor3=C.White, TextSize=15, ZIndex=13,
+})
+Loop(MainTitle,3.5,{TextColor3=C.VioletGlow})
+
+local OnDot=Fr(Header,{Size=UDim2.new(0,6,0,6),Position=UDim2.new(0,154,0.5,-3),BackgroundColor3=C.Green,ZIndex=14}); Co(OnDot,3)
+Loop(OnDot,1.1,{BackgroundTransparency=0.65,BackgroundColor3=Color3.fromRGB(50,210,115)})
+
+local CloseBtn = Bt(Header, {
+    Size=UDim2.new(0,26,0,26),
+    Position=UDim2.new(1,-26,0.5,-13),
+    BackgroundColor3=Color3.fromRGB(30,12,48),
+    Text="", ZIndex=14,
+})
+Co(CloseBtn,7)
+local closeBtnStroke = St(CloseBtn,C.Violet,1,0.55)
+local xL1=Fr(CloseBtn,{Size=UDim2.new(0,12,0,1.5),Position=UDim2.new(0.5,-6,0.5,-0.75),BackgroundColor3=Color3.fromRGB(200,180,225),Rotation=45,ZIndex=15}); Co(xL1,1)
+local xL2=Fr(CloseBtn,{Size=UDim2.new(0,12,0,1.5),Position=UDim2.new(0.5,-6,0.5,-0.75),BackgroundColor3=Color3.fromRGB(200,180,225),Rotation=-45,ZIndex=15}); Co(xL2,1)
+CloseBtn.MouseEnter:Connect(function()
+    T(CloseBtn,.12,{BackgroundColor3=Color3.fromRGB(130,18,45)})
+    T(closeBtnStroke,.12,{Transparency=0,Color=C.Red})
+    T(xL1,.12,{BackgroundColor3=C.White}); T(xL2,.12,{BackgroundColor3=C.White})
+end)
+CloseBtn.MouseLeave:Connect(function()
+    T(CloseBtn,.12,{BackgroundColor3=Color3.fromRGB(30,12,48)})
+    T(closeBtnStroke,.12,{Transparency=0.55,Color=C.Violet})
+    T(xL1,.12,{BackgroundColor3=Color3.fromRGB(200,180,225)}); T(xL2,.12,{BackgroundColor3=Color3.fromRGB(200,180,225)})
+end)
+CloseBtn.MouseButton1Down:Connect(function()
+    T(xL1,.07,{Size=UDim2.new(0,8,0,1.5),Position=UDim2.new(0.5,-4,0.5,-0.75)})
+    T(xL2,.07,{Size=UDim2.new(0,8,0,1.5),Position=UDim2.new(0.5,-4,0.5,-0.75)})
+end)
+CloseBtn.MouseButton1Up:Connect(function()
+    T(xL1,.12,{Size=UDim2.new(0,12,0,1.5),Position=UDim2.new(0.5,-6,0.5,-0.75)},Enum.EasingStyle.Back)
+    T(xL2,.12,{Size=UDim2.new(0,12,0,1.5),Position=UDim2.new(0.5,-6,0.5,-0.75)},Enum.EasingStyle.Back)
+end)
+
+local TickerClip=Fr(Content,{Size=UDim2.new(1,0,0,12),BackgroundTransparency=1,ClipsDescendants=true,LayoutOrder=2,ZIndex=12})
+local tickTxt="  ✦ discord.gg/706   ·   ✦ discord.gg/706   ·   ✦ discord.gg/706   ·   ✦ discord.gg/706  "
+local TickLbl=Lb(TickerClip,{Size=UDim2.new(0,600,1,0),Position=UDim2.new(0,0,0,0),Text=tickTxt,Font=Enum.Font.GothamBold,TextColor3=C.VioletBri,TextSize=10,ZIndex=13})
+Loop(TickLbl,2.8,{TextColor3=Color3.fromRGB(228,165,255)})
+local function mkMask(xp,rot)
+    local f=Fr(TickerClip,{Size=UDim2.new(0,22,1,0),Position=xp,BackgroundColor3=C.Base,ZIndex=15})
+    local g=Instance.new("UIGradient",f); g.Rotation=rot
+    g.Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,1)})
+end
+mkMask(UDim2.new(0,0,0,0),0); mkMask(UDim2.new(1,-22,0,0),180)
+local function ticker() TickLbl.Position=UDim2.new(0,0,0,0); T(TickLbl,6,{Position=UDim2.new(0,-185,0,0)},Enum.EasingStyle.Linear); After(6.02,ticker) end
+ticker()
+
+local function Div(order)
+    local d=Fr(Content,{Size=UDim2.new(1,0,0,1),BackgroundColor3=C.VioletDim,BackgroundTransparency=0.5,LayoutOrder=order,ZIndex=12})
+    Loop(d,3,{BackgroundColor3=C.Violet,BackgroundTransparency=0.78})
+end
+Div(3)
+
+local function Row(icon,ltext,order,pCol,pBg)
+    pCol=pCol or C.Red; pBg=pBg or C.RedDim
+    local row=Bt(Content,{Size=UDim2.new(1,0,0,33),BackgroundColor3=C.Surface,BackgroundTransparency=0.25,Text="",LayoutOrder=order,ZIndex=12})
+    Co(row,9)
+    local rS=St(row,C.Violet,1,0.8)
+    local cBar=Fr(row,{Size=UDim2.new(0,2,0.6,0),Position=UDim2.new(0,0,0.2,0),BackgroundColor3=C.Violet,BackgroundTransparency=1,ZIndex=13}); Co(cBar,1)
+    Lb(row,{Size=UDim2.new(0,24,1,0),Position=UDim2.new(0,10,0,0),Text=icon,TextSize=13,TextColor3=C.Muted,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=13})
+    local lbl=Lb(row,{Size=UDim2.new(1,-82,1,0),Position=UDim2.new(0,36,0,0),Text=ltext,TextSize=11,TextColor3=C.Silver,ZIndex=13})
+    local pill=Fr(row,{Size=UDim2.new(0,34,0,16),Position=UDim2.new(1,-44,0.5,-8),BackgroundColor3=pBg,ZIndex=13}); Co(pill,8)
+    local pT=Lb(pill,{Size=UDim2.new(1,0,1,0),Text="OFF",Font=Enum.Font.GothamBlack,TextSize=9,TextColor3=pCol,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=14})
+    Interact(row,C.SurfaceHi,C.Glass,C.Surface)
+    local on=false
+    local function toggle()
+        on=not on
+        if on then
+            T(row,.18,{BackgroundColor3=Color3.fromRGB(26,11,48),BackgroundTransparency=0})
+            T(rS,.18,{Color=C.VioletBri,Transparency=0.22}); T(cBar,.18,{BackgroundColor3=C.VioletBri,BackgroundTransparency=0})
+            T(lbl,.18,{TextColor3=C.White}); T(pill,.18,{BackgroundColor3=Color3.fromRGB(18,68,42)}); T(pT,.18,{TextColor3=C.Green}); pT.Text="ON"
+        else
+            T(row,.18,{BackgroundColor3=C.Surface,BackgroundTransparency=0.25})
+            T(rS,.18,{Color=C.Violet,Transparency=0.8}); T(cBar,.18,{BackgroundTransparency=1})
+            T(lbl,.18,{TextColor3=C.Silver}); T(pill,.18,{BackgroundColor3=pBg}); T(pT,.18,{TextColor3=pCol}); pT.Text="OFF"
+        end
+        return on
+    end
+    return row,toggle,function() return on end,lbl,pill,pT,rS,cBar
+end
+
+local TpRow,_,_,TpLbl,TpPill,TpPT,TpS,TpBar=Row("⬡","Fast Teleport",4,C.VioletGlow,C.VioletDim)
+TpPill.BackgroundColor3=Color3.fromRGB(28,9,55); TpPT.Text="GO"; TpPT.TextColor3=C.VioletBri
+local function setRunning(on)
+    if on then
+        T(TpRow,.18,{BackgroundColor3=Color3.fromRGB(32,24,8),BackgroundTransparency=0})
+        T(TpS,.18,{Color=C.Gold,Transparency=0.15}); T(TpBar,.18,{BackgroundColor3=C.Gold,BackgroundTransparency=0})
+        T(TpLbl,.18,{TextColor3=C.Gold}); T(TpPill,.18,{BackgroundColor3=C.GoldDim}); T(TpPT,.18,{TextColor3=C.Gold})
+    else
+        T(TpRow,.18,{BackgroundColor3=C.Surface,BackgroundTransparency=0.25})
+        T(TpS,.18,{Color=C.Violet,Transparency=0.8}); T(TpBar,.18,{BackgroundTransparency=1})
+        T(TpLbl,.18,{TextColor3=C.Silver}); T(TpPill,.18,{BackgroundColor3=Color3.fromRGB(28,9,55)}); T(TpPT,.18,{TextColor3=C.VioletBri})
+        TpLbl.Text="Fast Teleport"; TpPT.Text="GO"
+    end
+end
+
+local ABRow,ABToggle,ABState=Row("🛡","Auto Block",  5)
+local QARow,QAToggle,QAState=Row("⚡","Quick Access",6)
+local INRow,INToggle,INState=Row("👁","Invis Finish", 7)
+Div(8)
+
+local KbRow=Bt(Content,{Size=UDim2.new(1,0,0,27),BackgroundColor3=C.Surface,BackgroundTransparency=0.55,Text="",LayoutOrder=9,ZIndex=12})
+Co(KbRow,8); St(KbRow,C.Violet,1,0.88)
+Lb(KbRow,{Size=UDim2.new(0,22,1,0),Position=UDim2.new(0,9,0,0),Text="⌨",TextSize=12,TextColor3=C.Muted,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=13})
+Lb(KbRow,{Size=UDim2.new(1,-80,1,0),Position=UDim2.new(0,33,0,0),Text="Keybind",TextSize=10,TextColor3=C.Muted,ZIndex=13})
+local KbVal=Lb(KbRow,{Size=UDim2.new(0,52,1,0),Position=UDim2.new(1,-55,0,0),Text=State.Keybind.Name,Font=Enum.Font.GothamBlack,TextSize=10,TextColor3=C.VioletGlow,TextXAlignment=Enum.TextXAlignment.Right,ZIndex=13})
+Interact(KbRow,C.SurfaceHi,C.Glass,C.Surface)
+
+Div(10)
+
+local ComboBtn = Bt(Content, {
+    Size=UDim2.new(1,0,0,33),
+    BackgroundColor3=C.OrangeDim,
+    BackgroundTransparency=0.1,
+    Text="", LayoutOrder=11, ZIndex=12,
+})
+Co(ComboBtn,9)
+local comboStroke = St(ComboBtn, C.Orange, 1, 0.4)
+Loop(comboStroke, 2, {Transparency=0.75, Color=C.Gold})
+
+local cBar2=Fr(ComboBtn,{Size=UDim2.new(0,2,0.6,0),Position=UDim2.new(0,0,0.2,0),BackgroundColor3=C.Orange,BackgroundTransparency=0.3,ZIndex=13}); Co(cBar2,1)
+Lb(ComboBtn,{Size=UDim2.new(0,24,1,0),Position=UDim2.new(0,10,0,0),Text="⚡",TextSize=13,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=13})
+local comboLbl=Lb(ComboBtn,{Size=UDim2.new(1,-82,1,0),Position=UDim2.new(0,36,0,0),Text="Flash TP",TextSize=11,TextColor3=C.Orange,ZIndex=13})
+local comboPill=Fr(ComboBtn,{Size=UDim2.new(0,34,0,16),Position=UDim2.new(1,-44,0.5,-8),BackgroundColor3=C.OrangeDim,ZIndex=13}); Co(comboPill,8)
+St(comboPill,C.Orange,1,0.5)
+local comboPT=Lb(comboPill,{Size=UDim2.new(1,0,1,0),Text="GO",Font=Enum.Font.GothamBlack,TextSize=9,TextColor3=C.Orange,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=14})
+
+Interact(ComboBtn, Color3.fromRGB(80,40,10), C.OrangeDim, C.OrangeDim)
+
+local QB=Bt(Root,{Size=UDim2.new(0,115,0,46),Position=UDim2.new(0.5,-57,0.38,0),BackgroundColor3=C.Red,BackgroundTransparency=0.08,Text="",Visible=false,ZIndex=30})
+Co(QB,12); Loop(St(QB,C.Gold,1.5,0.25),0.65,{Transparency=0.78})
+Lb(QB,{Size=UDim2.new(0,26,1,0),Position=UDim2.new(0,8,0,0),Text="⛔",TextSize=17,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=31})
+Lb(QB,{Size=UDim2.new(1,-34,1,0),Position=UDim2.new(0,34,0,0),Text="BLOCK",Font=Enum.Font.GothamBlack,TextColor3=C.White,TextSize=14,ZIndex=31})
+Loop(QB,0.52,{BackgroundColor3=C.RedDim})
+Interact(QB,Color3.fromRGB(255,95,125),C.RedDim,C.Red)
+
+local function Toast(msg,color,icon)
+    local t=Fr(Root,{Size=UDim2.new(0,225,0,34),Position=UDim2.new(0.5,-112,1,60),BackgroundColor3=C.Surface,BackgroundTransparency=0.04,ZIndex=50})
+    Co(t,9); St(t,color or C.VioletBri,1,0.35)
+    Lb(t,{Size=UDim2.new(0,26,1,0),Position=UDim2.new(0,7,0,0),Text=icon or "·",TextSize=13,TextColor3=color or C.VioletGlow,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=51})
+    Lb(t,{Size=UDim2.new(1,-34,1,0),Position=UDim2.new(0,33,0,0),Text=msg,TextSize=11,TextColor3=C.Silver,ZIndex=51})
+    T(t,.28,{Position=UDim2.new(0.5,-112,1,-86)},Enum.EasingStyle.Back)
+    After(2,function() T(t,.22,{Position=UDim2.new(0.5,-112,1,60),BackgroundTransparency=1}); After(.25,function() pcall(function() t:Destroy() end) end) end)
+end
+
+local BAR_H = 32
+
+local BottomBar = Fr(Root, {
+    Size=UDim2.new(0,300,0,BAR_H),
+    Position=UDim2.new(0.5,-150,1,BAR_H),
+    BackgroundColor3=C.BarBg, BackgroundTransparency=0.05,
+    Visible=false, ZIndex=40,
+})
+Co(BottomBar,12)
+local bbStroke=St(BottomBar,C.Violet,1.2,0.4)
+Loop(bbStroke,3,{Color=C.VioletBri,Transparency=0.12})
+
+local bbTop=Fr(BottomBar,{Size=UDim2.new(0.5,0,0,1),Position=UDim2.new(0.25,0,0,0),BackgroundColor3=C.VioletBri,ZIndex=41}); Co(bbTop,1)
+Loop(bbTop,2.2,{BackgroundColor3=C.VioletGlow,Size=UDim2.new(0.8,0,0,1),Position=UDim2.new(0.1,0,0,0)})
+local bbG=Fr(BottomBar,{Size=UDim2.new(0,60,0,60),Position=UDim2.new(0,-15,0.5,-30),BackgroundColor3=C.VioletDim,BackgroundTransparency=0.75,ZIndex=40}); Co(bbG,30)
+
+local bbTag=Fr(BottomBar,{Size=UDim2.new(0,32,0,20),Position=UDim2.new(0,8,0.5,-10),BackgroundColor3=C.VioletDim,ZIndex=42}); Co(bbTag,6)
+St(bbTag,C.Violet,1,0.5)
+local bbTagLbl=Lb(bbTag,{Size=UDim2.new(1,0,1,0),Text="706",Font=Enum.Font.GothamBlack,TextColor3=C.VioletGlow,TextSize=9,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=43})
+Loop(bbTagLbl,2.5,{TextColor3=C.White})
+
+local bbTickClip=Fr(BottomBar,{Size=UDim2.new(1,-125,1,0),Position=UDim2.new(0,47,0,0),BackgroundTransparency=1,ClipsDescendants=true,ZIndex=42})
+local bbTickTxt="  ✦ discord.gg/706   ·   706 Auto Block   ·   ✦ discord.gg/706   ·   706 Auto Block   ·  "
+local bbLbl=Lb(bbTickClip,{Size=UDim2.new(0,700,1,0),Position=UDim2.new(0,0,0,0),Text=bbTickTxt,Font=Enum.Font.GothamBold,TextColor3=C.VioletBri,TextSize=10,ZIndex=43})
+Loop(bbLbl,3,{TextColor3=Color3.fromRGB(228,165,255)})
+local function bbMask(xp,rot)
+    local f=Fr(bbTickClip,{Size=UDim2.new(0,16,1,0),Position=xp,BackgroundColor3=C.BarBg,ZIndex=44})
+    local g=Instance.new("UIGradient",f); g.Rotation=rot
+    g.Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0),NumberSequenceKeypoint.new(1,1)})
+end
+bbMask(UDim2.new(0,0,0,0),0); bbMask(UDim2.new(1,-16,0,0),180)
+local function bbTicker() bbLbl.Position=UDim2.new(0,0,0,0); T(bbLbl,8,{Position=UDim2.new(0,-230,0,0)},Enum.EasingStyle.Linear); After(8.02,bbTicker) end
+bbTicker()
+
+local FpsLbl=Lb(BottomBar,{Size=UDim2.new(0,36,1,0),Position=UDim2.new(1,-94,0,0),Text="-- fps",Font=Enum.Font.GothamBold,TextColor3=C.Muted,TextSize=9,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=42})
+local PingLbl=Lb(BottomBar,{Size=UDim2.new(0,34,1,0),Position=UDim2.new(1,-56,0,0),Text="-- ms",Font=Enum.Font.GothamBold,TextColor3=C.Muted,TextSize=9,TextXAlignment=Enum.TextXAlignment.Center,ZIndex=42})
+
+local ReopenBtn=Bt(BottomBar,{Size=UDim2.new(0,20,0,20),Position=UDim2.new(1,-26,0.5,-10),BackgroundColor3=C.VioletDim,Text="↑",Font=Enum.Font.GothamBlack,TextColor3=C.VioletGlow,TextSize=11,ZIndex=43})
+Co(ReopenBtn,6); St(ReopenBtn,C.Violet,1,0.45)
+Loop(ReopenBtn,1.8,{BackgroundColor3=C.Glass})
+ReopenBtn.MouseEnter:Connect(function()
+    T(ReopenBtn,.12,{BackgroundColor3=C.Violet,TextColor3=C.White})
+    T(ReopenBtn:FindFirstChildOfClass("UIStroke"),.12,{Transparency=0,Color=C.VioletGlow})
+end)
+ReopenBtn.MouseLeave:Connect(function()
+    T(ReopenBtn,.12,{BackgroundColor3=C.VioletDim,TextColor3=C.VioletGlow})
+    T(ReopenBtn:FindFirstChildOfClass("UIStroke"),.12,{Transparency=0.45,Color=C.Violet})
+end)
+
+local function bbDiv(xOff)
+    Fr(BottomBar,{Size=UDim2.new(0,1,0,12),Position=UDim2.new(1,xOff,0.5,-6),BackgroundColor3=C.Violet,BackgroundTransparency=0.7,ZIndex=42})
+end
+bbDiv(-96); bbDiv(-58); bbDiv(-28)
+
+local fpsCount,fpsTimer=0,0
+RunService.RenderStepped:Connect(function(dt)
+    fpsCount=fpsCount+1; fpsTimer=fpsTimer+dt
+    if fpsTimer>=0.5 then
+        local fps=math.round(fpsCount/fpsTimer); fpsCount=0; fpsTimer=0
+        FpsLbl.Text=fps.." fps"
+        T(FpsLbl,.2,{TextColor3=fps>=55 and C.Green or fps>=30 and C.Gold or C.Red})
+    end
+end)
+task.spawn(function()
+    while true do
+        local ok,ping=pcall(function() return math.round(Stats.Network.ServerStatsItem["Data Ping"]:GetValue()) end)
+        if ok then
+            PingLbl.Text=ping.." ms"
+            T(PingLbl,.3,{TextColor3=ping<80 and C.Green or ping<150 and C.Gold or C.Red})
+        end
+        task.wait(1)
+    end
+end)
+
+local function ShowBar()
+    BottomBar.Visible=true
+    T(BottomBar,.32,{Position=UDim2.new(0.5,-150,1,-(BAR_H+10))},Enum.EasingStyle.Back)
+end
+local function HideBar()
+    T(BottomBar,.2,{Position=UDim2.new(0.5,-150,1,BAR_H+4)},Enum.EasingStyle.Quint)
+    After(.22,function() BottomBar.Visible=false end)
+end
+local function OpenPanel()
+    State.PanelOpen=true; Panel.Visible=true
+    T(Panel,.36,{Size=UDim2.new(0,PW,0,PH)},Enum.EasingStyle.Back)
+    T(panelStroke,.3,{Transparency=0.1})
+    HideBar()
+end
+local function ClosePanel()
+    State.PanelOpen=false
+    T(Panel,.22,{Size=UDim2.new(0,PW,0,0)},Enum.EasingStyle.Quint)
+    T(panelStroke,.22,{Transparency=0.88})
+    After(.23,function() if not State.PanelOpen then Panel.Visible=false end end)
+    After(.1,ShowBar)
+end
+OpenPanel()
+
+local function getClosest()
+    local myR=Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+    if not myR then return nil end
+    local best,bd=nil,math.huge
+    for _,p in pairs(Players:GetPlayers()) do
+        if p~=Player and p.Character then
+            local r=p.Character:FindFirstChild("HumanoidRootPart")
+            if r then local d=(myR.Position-r.Position).Magnitude; if d<bd then bd=d;best=p end end
+        end
+    end
+    return best
+end
+
+local blockCooldown = false
+local function doBlock()
+    if blockCooldown then return end
+    blockCooldown = true
+    local tgt=getClosest()
+    if not tgt then Toast("No nearby player",C.Red,"✕"); blockCooldown=false; return end
+    pcall(function() StarterGui:SetCore("PromptBlockPlayer",tgt) end)
+    task.wait(0.4)
+    local vp=Camera.ViewportSize
+    for i=1,2 do
+        VirtualInputManager:SendMouseButtonEvent(vp.X/2,vp.Y*0.54,0,true, game,1); task.wait(0.02)
+        VirtualInputManager:SendMouseButtonEvent(vp.X/2,vp.Y*0.54,0,false,game,1); task.wait(0.05)
+    end
+    Toast("Player blocked!",C.Green,"🛡")
+    task.wait(2)
+    blockCooldown = false
+end
+
+local function fastTeleport(position)
+    local player = Player
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local rootPart = player.Character.HumanoidRootPart
+        rootPart.CFrame = CFrame.new(position)
+        rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+        rootPart.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+    end
+end
+
+local function RunPath()
+    if State.Running then return end
+    local char=Player.Character
+    local root=char and char:FindFirstChild("HumanoidRootPart")
+    local hum =char and char:FindFirstChild("Humanoid")
+    if not root or not hum then Toast("Character not found",C.Red,"✕"); return end
+    
+    State.Running=true
+    setRunning(true)
+    T(OnDot,.2,{BackgroundColor3=C.Gold})
+    
+    TpLbl.Text="Wait.."
+    TpPT.Text=""
+    
+    task.spawn(function()
+        for i = 1, #CFG.Waypoints do
+            if not State.Running or Player.Character ~= char then break end
+            fastTeleport(CFG.Waypoints[i])
+            TpLbl.Text = "TP.."
+            TpPT.Text = i .. "/" .. #CFG.Waypoints
+            task.wait(CFG.TpDelay)
+        end
+        
+        if INState() and State.Running then
+            task.wait(CFG.SafetyDelay)
+            local cloak = Player.Backpack:FindFirstChild(CFG.InvisTool)
+            if cloak then 
+                hum:EquipTool(cloak)
+                cloak:Activate()
+            end
+        end
+        
+        State.Running = false
+        setRunning(false)
+        T(OnDot,.2,{BackgroundColor3=C.Green})
+        Toast("TP Complete!",C.Green,"✓")
+    end)
+end
+
+local function equip(char, hum, n)
+    local t = Player.Backpack:FindFirstChild(n) or char:FindFirstChild(n)
+    if t then hum:EquipTool(t); return t end
+    for _,v in pairs(Player.Backpack:GetChildren()) do
+        if v:IsA("Tool") and v.Name:lower():find(n:lower()) then hum:EquipTool(v); return v end
+    end
+    return nil
+end
+
+local function doFlashTP()
+    local char = Player.Character
+    if not char then Toast("No character", C.Red, "✕"); return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    local hum = char:FindFirstChild("Humanoid")
+    if not hrp or not hum then Toast("No character", C.Red, "✕"); return end
+
+    if comboPT.Text == "..." then return end
+
+    T(ComboBtn, .12, {BackgroundColor3=C.OrangeDim})
+    comboPT.Text = "..."; comboLbl.Text = "Running..."
+
+    local oldCameraType = Camera.CameraType
+
+    task.spawn(function()
+        local ok, err = pcall(function()
+
+            hrp.CFrame = CFrame.new(CFG.POS_CARPET)
+            local carpet = equip(char, hum, "Carpet")
+            if carpet then
+                local t0 = tick()
+                repeat task.wait(0.02) until char:FindFirstChild("Carpet") or tick()-t0 > 0.8
+                carpet:Activate()
+                task.wait(0.15)
+            end
+
+            local flash = equip(char, hum, "Flash")
+            if not flash then
+                Toast("No Flash found", C.Red, "✕")
+                return
+            end
+
+            local t1 = tick()
+            repeat task.wait(0.02) until char:FindFirstChild("Flash") or tick()-t1 > 1
+
+            hrp.CFrame = CFrame.new(CFG.POS_CARPET, Vector3.new(CFG.POS_FLASH_TARGET.X, CFG.POS_CARPET.Y, CFG.POS_FLASH_TARGET.Z))
+
+            local fromPos = CFG.POS_CARPET
+            local direction = (CFG.POS_FLASH_TARGET - fromPos).Unit
+            Camera.CameraType = Enum.CameraType.Scriptable
+            Camera.CFrame = CFrame.new(fromPos + (-direction * 8 + Vector3.new(0, 4, 0)), CFG.POS_FLASH_TARGET)
+            task.wait(0.06)
+
+            local vp = Camera.ViewportSize
+            local cx, cy = math.floor(vp.X / 2), math.floor(vp.Y / 2)
+            VirtualInputManager:SendMouseButtonEvent(cx, cy, 0, true, game, 1)
+            task.wait(0.05)
+            VirtualInputManager:SendMouseButtonEvent(cx, cy, 0, false, game, 1)
+
+            task.wait(0.1)
+            Toast("Flash TP done!", C.Orange, "⚡")
+        end)
+
+        Camera.CameraType = oldCameraType
+
+        if not ok then
+            Toast("Flash TP error!", C.Red, "✕")
+            warn("[706 FlashTP] " .. tostring(err))
+        end
+
+        comboPT.Text = "GO"; comboLbl.Text = "Flash TP"
+        T(ComboBtn, .18, {BackgroundColor3=C.OrangeDim})
+    end)
+end
+
+local function onChar(char)
+    State.Running=false; setRunning(false)
+    local root=char:WaitForChild("HumanoidRootPart",5)
+    local hum=char:WaitForChild("Humanoid",5)
+    if hum then hum.Died:Connect(function() State.Running=false; setRunning(false) end) end
+end
+Player.CharacterAdded:Connect(onChar)
+if Player.Character then task.spawn(function() onChar(Player.Character) end) end
+
+CloseBtn.MouseButton1Click:Connect(ClosePanel)
+ReopenBtn.MouseButton1Click:Connect(OpenPanel)
+TpRow.MouseButton1Click:Connect(RunPath)
+ComboBtn.MouseButton1Click:Connect(doFlashTP)
+
+ABRow.MouseButton1Click:Connect(function()
+    State.AutoBlock=ABToggle()
+    Toast("Auto Block "..(State.AutoBlock and "ON" or "OFF"),State.AutoBlock and C.Green or C.Red,State.AutoBlock and "✓" or "✕")
+end)
+QARow.MouseButton1Click:Connect(function()
+    State.QuickAccess=QAToggle(); QB.Visible=State.QuickAccess
+    Toast("Quick Access "..(State.QuickAccess and "ON" or "OFF"),State.QuickAccess and C.Green or C.Red,State.QuickAccess and "⚡" or "✕")
+end)
+INRow.MouseButton1Click:Connect(function()
+    State.InvisFinish=INToggle()
+    Toast("Invis Finish "..(State.InvisFinish and "ON" or "OFF"),State.InvisFinish and C.Green or C.Red,State.InvisFinish and "👁" or "✕")
+end)
+KbRow.MouseButton1Click:Connect(function()
+    State.Binding=true; KbVal.Text="..."; T(KbVal,.15,{TextColor3=C.Gold})
+end)
+QB.MouseButton1Click:Connect(doBlock)
+ProximityPromptService.PromptTriggered:Connect(function(prompt,who)
+    if State.AutoBlock and who==Player then
+        local at,ot=string.lower(prompt.ActionText),string.lower(prompt.ObjectText)
+        if at:find("steal") or ot:find("steal") then doBlock() end
+    end
+end)
+UserInputService.InputBegan:Connect(function(input,processed)
+    if State.Binding and input.UserInputType==Enum.UserInputType.Keyboard then
+        State.Keybind=input.KeyCode; KbVal.Text=input.KeyCode.Name
+        T(KbVal,.2,{TextColor3=C.VioletGlow}); State.Binding=false
+        Toast("Keybind → "..input.KeyCode.Name,C.VioletGlow,"⌨")
+    elseif not processed and input.KeyCode==State.Keybind then RunPath() end
+end)
+
+After(0.3, function() Toast("706 Auto Block ready",C.VioletGlow,"✓") end)
