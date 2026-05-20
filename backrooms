@@ -1,0 +1,935 @@
+local TweenInfo_New, r834, r870, r882, r894, BackroomsMap, r915, r927, r939, DescendantAdded, Heartbeat, Character, r965, r977, r989, r1001, r1013, r1025, r1037, r1065, r1077, r1089, r1101, r1129, r1141, r1153;
+local r1, Pcall_Result = pcall(debug.getinfo, function(a_0, b_0, c_0, ...)
+
+end, "S");
+xpcall(function(a_0, b_0, c_0, ...)
+
+end, function(a_0, b_0, c_0, ...)
+    for for_key_0, for_val_0 in string.gmatch(
+        tostring(a_0),
+        ":(%d+):"
+    ) do
+        tonumber(for_key_0);
+    end;
+    return a_0;
+end);
+local r10, Pcall_Result_2 = pcall(debug.getinfo, function(a, b, c, ...)
+
+end, "S");
+xpcall(function(a, b, c, ...)
+
+end, function(a, b, c, ...)
+    for for_key_1, for_val_1 in string.gmatch(
+        tostring(a),
+        ":(%d+):"
+    ) do
+        tonumber(for_key_1);
+    end;
+    return a;
+end);
+local r17, r18 = pcall(debug.getinfo, function(a_2, b_2, c_2, ...) end, "S");
+local _ = r18.what;
+local r21, r22 = pcall(debug.getinfo, print, "S");
+local _ = r22.what;
+local Players = game:GetService("Players");
+local RunService = game:GetService("RunService");
+local UserInputService = game:GetService("UserInputService");
+local TweenService = game:GetService("TweenService");
+local LocalPlayer = Players.LocalPlayer;
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui");
+game:GetService("GuiService");
+local TouchEnabled = UserInputService.TouchEnabled;
+print("[StarHub] Mobile detected:", TouchEnabled);
+local FromRGB = Color3.fromRGB;
+FromRGB(200, 200, 220);
+FromRGB(255, 50, 255);
+FromRGB(255, 50, 50);
+FromRGB(255, 50, 50);
+FromRGB(255, 120, 30);
+FromRGB(255, 200, 0);
+FromRGB(255, 215, 0);
+FromRGB(180, 50, 255);
+FromRGB(50, 120, 255);
+FromRGB(50, 200, 100);
+FromRGB(180, 180, 180);
+local BackroomsHub = Instance.new("ScreenGui");
+BackroomsHub.Name = "BackroomsHub";
+BackroomsHub.ResetOnSpawn = false;
+BackroomsHub.IgnoreGuiInset = true;
+local _ = Enum.ZIndexBehavior.Sibling;
+BackroomsHub.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
+BackroomsHub.Parent = PlayerGui;
+local Frame = Instance.new("Frame");
+local UDim2_New = UDim2.new;
+Frame.Size = UDim2_New(0, 210, 0, 340);
+Frame.Position = UDim2_New(0, 6, 0.5, -170);
+Frame.BackgroundColor3 = FromRGB(10, 10, 16);
+Frame.BorderSizePixel = 0;
+Frame.ClipsDescendants = true;
+Frame.Parent = BackroomsHub;
+local UDim_New = UDim.new;
+Instance.new("UICorner", Frame).CornerRadius = UDim_New(0, 14);
+local UIStroke = Instance.new("UIStroke");
+UIStroke.Color = FromRGB(90, 90, 160);
+UIStroke.Thickness = 1.5;
+UIStroke.Transparency = 0.3;
+UIStroke.Parent = Frame;
+local Frame_2 = Instance.new("Frame");
+Frame_2.Size = UDim2_New(1, 0, 0, 32);
+Frame_2.BackgroundColor3 = FromRGB(18, 18, 30);
+Frame_2.BorderSizePixel = 0;
+Frame_2.ZIndex = 2;
+Frame_2.Parent = Frame;
+Instance.new("UICorner", Frame_2).CornerRadius = UDim_New(0, 14);
+local Frame_3 = Instance.new("Frame");
+Frame_3.Size = UDim2_New(1, 0, 0.5, 0);
+Frame_3.Position = UDim2_New(0, 0, 0.5, 0);
+Frame_3.BackgroundColor3 = FromRGB(18, 18, 30);
+Frame_3.BorderSizePixel = 0;
+Frame_3.ZIndex = 2;
+Frame_3.Parent = Frame_2;
+local Frame_4 = Instance.new("Frame");
+Frame_4.Size = UDim2_New(1, 0, 0, 2);
+Frame_4.Position = UDim2_New(0, 0, 1, -1);
+Frame_4.BorderSizePixel = 0;
+Frame_4.ZIndex = 3;
+Frame_4.Parent = Frame_2;
+Instance.new("UICorner", Frame_4).CornerRadius = UDim_New(0, 2);
+local UIGradient = Instance.new("UIGradient");
+local ColorSequenceKeypoint_New = ColorSequenceKeypoint.new;
+UIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint_New(
+        0,
+        FromRGB(100, 100, 255)
+    ),
+    ColorSequenceKeypoint_New(
+        0.5,
+        FromRGB(180, 100, 255)
+    ),
+    ColorSequenceKeypoint_New(
+        1,
+        FromRGB(100, 100, 255)
+    )
+});
+UIGradient.Parent = Frame_4;
+local Frame_5 = Instance.new("Frame");
+Frame_5.Size = UDim2_New(0, 8, 0, 8);
+Frame_5.Position = UDim2_New(0, 12, 0.5, -4);
+Frame_5.BackgroundColor3 = FromRGB(130, 130, 255);
+Frame_5.BorderSizePixel = 0;
+Frame_5.ZIndex = 3;
+Frame_5.Parent = Frame_2;
+Instance.new("UICorner", Frame_5).CornerRadius = UDim_New(1, 0);
+local Star_Hub_Backrooms = Instance.new("TextLabel");
+Star_Hub_Backrooms.Size = UDim2_New(1, -60, 1, 0);
+Star_Hub_Backrooms.Position = UDim2_New(0, 26, 0, 0);
+Star_Hub_Backrooms.BackgroundTransparency = 1;
+Star_Hub_Backrooms.Text = "Star Hub  |  Backrooms";
+Star_Hub_Backrooms.TextColor3 = FromRGB(200, 200, 255);
+Star_Hub_Backrooms.TextSize = 10;
+local _ = Enum.Font.GothamBold;
+Star_Hub_Backrooms.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Star_Hub_Backrooms.TextXAlignment = Enum.TextXAlignment.Left;
+Star_Hub_Backrooms.ZIndex = 3;
+Star_Hub_Backrooms.Parent = Frame_2;
+local TextButton = Instance.new("TextButton");
+TextButton.Size = UDim2_New(0, 28, 0, 28);
+TextButton.Position = UDim2_New(1, -36, 0.5, -14);
+TextButton.BackgroundColor3 = FromRGB(30, 30, 50);
+TextButton.BorderSizePixel = 0;
+TextButton.Text = "−";
+TextButton.TextColor3 = FromRGB(150, 150, 200);
+TextButton.TextSize = 18;
+local _ = Enum.Font.GothamBold;
+TextButton.Font = Enum.Font.GothamBold;
+TextButton.ZIndex = 4;
+TextButton.Parent = Frame_2;
+Instance.new("UICorner", TextButton).CornerRadius = UDim_New(0, 6);
+local ScrollingFrame = Instance.new("ScrollingFrame");
+ScrollingFrame.Size = UDim2_New(1, 0, 1, -32);
+ScrollingFrame.Position = UDim2_New(0, 0, 0, 32);
+ScrollingFrame.BackgroundTransparency = 1;
+ScrollingFrame.BorderSizePixel = 0;
+ScrollingFrame.ScrollBarThickness = 1;
+ScrollingFrame.CanvasSize = UDim2_New(0, 0, 0, 600);
+local _ = Enum.AutomaticSize.Y;
+ScrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y;
+ScrollingFrame.Parent = Frame;
+local Frame_6 = Instance.new("Frame");
+Frame_6.Size = UDim2_New(1, 0, 0, 600);
+Frame_6.BackgroundTransparency = 1;
+Frame_6.Parent = ScrollingFrame;
+TextButton.MouseButton1Click:Connect(function(a_2, b_2, c_2, ...)
+    TweenInfo_New = TweenInfo.new;
+    local _ = Enum.EasingStyle.Quart;
+    local _ = Enum.EasingDirection.Out;
+    r834 = TweenService:Create(Frame, TweenInfo_New(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        ["Size"] = UDim2_New(0, 210, 0, 32)
+    });
+    r834:Play();
+    r834:Play();
+    TextButton.Text = "+";
+end);
+local Frame_7 = Instance.new("Frame");
+Frame_7.Size = UDim2_New(1, -14, 0, 18);
+Frame_7.Position = UDim2_New(0, 7, 0, 7);
+Frame_7.BackgroundTransparency = 1;
+Frame_7.Parent = Frame_6;
+local Frame_8 = Instance.new("Frame");
+Frame_8.Size = UDim2_New(0, 3, 0, 12);
+Frame_8.Position = UDim2_New(0, 0, 0.5, -6);
+Frame_8.BackgroundColor3 = FromRGB(100, 100, 200);
+Frame_8.BorderSizePixel = 0;
+Frame_8.Parent = Frame_7;
+Instance.new("UICorner", Frame_8).CornerRadius = UDim_New(1, 0);
+local VISUAL = Instance.new("TextLabel");
+VISUAL.Size = UDim2_New(1, -8, 1, 0);
+VISUAL.Position = UDim2_New(0, 8, 0, 0);
+VISUAL.BackgroundTransparency = 1;
+VISUAL.Text = "VISUAL";
+VISUAL.TextColor3 = FromRGB(120, 120, 190);
+VISUAL.TextSize = 8;
+local _ = Enum.Font.GothamBold;
+VISUAL.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+VISUAL.TextXAlignment = Enum.TextXAlignment.Left;
+VISUAL.Parent = Frame_7;
+local Frame_9 = Instance.new("Frame");
+Frame_9.Size = UDim2_New(1, -14, 0, 44);
+Frame_9.Position = UDim2_New(0, 7, 0, 29);
+Frame_9.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_9.BorderSizePixel = 0;
+Frame_9.Parent = Frame_6;
+Instance.new("UICorner", Frame_9).CornerRadius = UDim_New(0, 8);
+local UIStroke_2 = Instance.new("UIStroke");
+UIStroke_2.Color = FromRGB(35, 35, 60);
+UIStroke_2.Thickness = 1;
+UIStroke_2.Parent = Frame_9;
+local Wall_X_Ray = Instance.new("TextLabel");
+Wall_X_Ray.BackgroundTransparency = 1;
+Wall_X_Ray.Text = "Wall X-Ray";
+Wall_X_Ray.TextColor3 = FromRGB(220, 220, 230);
+Wall_X_Ray.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Wall_X_Ray.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Wall_X_Ray.TextXAlignment = Enum.TextXAlignment.Left;
+Wall_X_Ray.ZIndex = 2;
+Wall_X_Ray.Parent = Frame_9;
+Wall_X_Ray.Size = UDim2_New(1, -52, 0, 18);
+Wall_X_Ray.Position = UDim2_New(0, 10, 0, 8);
+local S_Walls_Transparent = Instance.new("TextLabel");
+S_Walls_Transparent.Size = UDim2_New(1, -52, 0, 13);
+S_Walls_Transparent.Position = UDim2_New(0, 10, 0, 26);
+S_Walls_Transparent.BackgroundTransparency = 1;
+S_Walls_Transparent.Text = "Makes walls transparent";
+S_Walls_Transparent.TextColor3 = FromRGB(80, 80, 110);
+S_Walls_Transparent.TextSize = 7;
+local _ = Enum.Font.Gotham;
+S_Walls_Transparent.Font = Enum.Font.Gotham;
+local _ = Enum.TextXAlignment.Left;
+S_Walls_Transparent.TextXAlignment = Enum.TextXAlignment.Left;
+S_Walls_Transparent.ZIndex = 2;
+S_Walls_Transparent.Parent = Frame_9;
+local TextButton_2 = Instance.new("TextButton");
+TextButton_2.Size = UDim2_New(0, 32, 0, 16);
+TextButton_2.Position = UDim2_New(1, -42, 0.5, -8);
+TextButton_2.BackgroundColor3 = FromRGB(35, 35, 55);
+TextButton_2.BorderSizePixel = 0;
+TextButton_2.Text = "";
+TextButton_2.ZIndex = 3;
+TextButton_2.Parent = Frame_9;
+Instance.new("UICorner", TextButton_2).CornerRadius = UDim_New(1, 0);
+local Frame_10 = Instance.new("Frame");
+Frame_10.Size = UDim2_New(0, 10, 0, 10);
+Frame_10.Position = UDim2_New(0, 3, 0.5, -5);
+Frame_10.BackgroundColor3 = FromRGB(120, 120, 150);
+Frame_10.BorderSizePixel = 0;
+Frame_10.ZIndex = 4;
+Frame_10.Parent = TextButton_2;
+Instance.new("UICorner", Frame_10).CornerRadius = UDim_New(1, 0);
+UDim2_New(0, 3, 0.5, -5);
+local Frame_11 = Instance.new("Frame");
+Frame_11.Size = UDim2_New(1, -14, 0, 1);
+Frame_11.Position = UDim2_New(0, 7, 0, 78);
+Frame_11.BackgroundColor3 = FromRGB(30, 30, 55);
+Frame_11.BorderSizePixel = 0;
+Frame_11.Parent = Frame_6;
+local Frame_12 = Instance.new("Frame");
+Frame_12.Size = UDim2_New(1, -14, 0, 18);
+Frame_12.Position = UDim2_New(0, 7, 0, 84);
+Frame_12.BackgroundTransparency = 1;
+Frame_12.Parent = Frame_6;
+local Frame_13 = Instance.new("Frame");
+Frame_13.Size = UDim2_New(0, 3, 0, 12);
+Frame_13.Position = UDim2_New(0, 0, 0.5, -6);
+Frame_13.BackgroundColor3 = FromRGB(100, 100, 200);
+Frame_13.BorderSizePixel = 0;
+Frame_13.Parent = Frame_12;
+Instance.new("UICorner", Frame_13).CornerRadius = UDim_New(1, 0);
+local ESP = Instance.new("TextLabel");
+ESP.Size = UDim2_New(1, -8, 1, 0);
+ESP.Position = UDim2_New(0, 8, 0, 0);
+ESP.BackgroundTransparency = 1;
+ESP.Text = "ESP";
+ESP.TextColor3 = FromRGB(120, 120, 190);
+ESP.TextSize = 8;
+local _ = Enum.Font.GothamBold;
+ESP.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+ESP.TextXAlignment = Enum.TextXAlignment.Left;
+ESP.Parent = Frame_12;
+local Frame_14 = Instance.new("Frame");
+Frame_14.Size = UDim2_New(1, -14, 0, 44);
+Frame_14.Position = UDim2_New(0, 7, 0, 106);
+Frame_14.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_14.BorderSizePixel = 0;
+Frame_14.Parent = Frame_6;
+Instance.new("UICorner", Frame_14).CornerRadius = UDim_New(0, 8);
+local UIStroke_3 = Instance.new("UIStroke");
+UIStroke_3.Color = FromRGB(35, 35, 60);
+UIStroke_3.Thickness = 1;
+UIStroke_3.Parent = Frame_14;
+local Brainrot_ESP = Instance.new("TextLabel");
+Brainrot_ESP.BackgroundTransparency = 1;
+Brainrot_ESP.Text = "Brainrot ESP";
+Brainrot_ESP.TextColor3 = FromRGB(220, 220, 230);
+Brainrot_ESP.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Brainrot_ESP.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Brainrot_ESP.TextXAlignment = Enum.TextXAlignment.Left;
+Brainrot_ESP.ZIndex = 2;
+Brainrot_ESP.Parent = Frame_14;
+Brainrot_ESP.Size = UDim2_New(1, -52, 0, 18);
+Brainrot_ESP.Position = UDim2_New(0, 10, 0, 8);
+local Highlights_Entities = Instance.new("TextLabel");
+Highlights_Entities.Size = UDim2_New(1, -52, 0, 13);
+Highlights_Entities.Position = UDim2_New(0, 10, 0, 26);
+Highlights_Entities.BackgroundTransparency = 1;
+Highlights_Entities.Text = "Highlights entities";
+Highlights_Entities.TextColor3 = FromRGB(80, 80, 110);
+Highlights_Entities.TextSize = 7;
+local _ = Enum.Font.Gotham;
+Highlights_Entities.Font = Enum.Font.Gotham;
+local _ = Enum.TextXAlignment.Left;
+Highlights_Entities.TextXAlignment = Enum.TextXAlignment.Left;
+Highlights_Entities.ZIndex = 2;
+Highlights_Entities.Parent = Frame_14;
+local TextButton_3 = Instance.new("TextButton");
+TextButton_3.Size = UDim2_New(0, 32, 0, 16);
+TextButton_3.Position = UDim2_New(1, -42, 0.5, -8);
+TextButton_3.BackgroundColor3 = FromRGB(35, 35, 55);
+TextButton_3.BorderSizePixel = 0;
+TextButton_3.Text = "";
+TextButton_3.ZIndex = 3;
+TextButton_3.Parent = Frame_14;
+Instance.new("UICorner", TextButton_3).CornerRadius = UDim_New(1, 0);
+local Frame_15 = Instance.new("Frame");
+Frame_15.Size = UDim2_New(0, 10, 0, 10);
+Frame_15.Position = UDim2_New(0, 3, 0.5, -5);
+Frame_15.BackgroundColor3 = FromRGB(120, 120, 150);
+Frame_15.BorderSizePixel = 0;
+Frame_15.ZIndex = 4;
+Frame_15.Parent = TextButton_3;
+Instance.new("UICorner", Frame_15).CornerRadius = UDim_New(1, 0);
+UDim2_New(0, 3, 0.5, -5);
+local Frame_16 = Instance.new("Frame");
+Frame_16.Size = UDim2_New(1, -14, 0, 52);
+Frame_16.Position = UDim2_New(0, 7, 0, 155);
+Frame_16.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_16.BorderSizePixel = 0;
+Frame_16.Parent = Frame_6;
+Instance.new("UICorner", Frame_16).CornerRadius = UDim_New(0, 8);
+local UIStroke_4 = Instance.new("UIStroke");
+UIStroke_4.Color = FromRGB(35, 35, 60);
+UIStroke_4.Thickness = 1;
+UIStroke_4.Parent = Frame_16;
+local Frame_17 = Instance.new("Frame");
+Frame_17.Size = UDim2_New(1, -16, 0, 22);
+Frame_17.Position = UDim2_New(0, 8, 0, 8);
+Frame_17.BackgroundTransparency = 1;
+Frame_17.Parent = Frame_16;
+local Max_Distance = Instance.new("TextLabel");
+Max_Distance.Size = UDim2_New(0.6, 0, 1, 0);
+Max_Distance.BackgroundTransparency = 1;
+Max_Distance.Text = "Max Distance";
+Max_Distance.TextColor3 = FromRGB(220, 220, 230);
+Max_Distance.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Max_Distance.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Max_Distance.TextXAlignment = Enum.TextXAlignment.Left;
+Max_Distance.ZIndex = 2;
+Max_Distance.Parent = Frame_17;
+local TextLabel = Instance.new("TextLabel");
+TextLabel.Size = UDim2_New(0.4, 0, 1, 0);
+TextLabel.Position = UDim2_New(0.6, 0, 0, 0);
+TextLabel.BackgroundTransparency = 1;
+TextLabel.Text = "150";
+TextLabel.TextColor3 = FromRGB(130, 130, 220);
+TextLabel.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+TextLabel.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Right;
+TextLabel.TextXAlignment = Enum.TextXAlignment.Right;
+TextLabel.ZIndex = 2;
+TextLabel.Parent = Frame_17;
+local Frame_18 = Instance.new("Frame");
+Frame_18.Size = UDim2_New(1, -16, 0, 8);
+Frame_18.Position = UDim2_New(0, 8, 0, 36);
+Frame_18.BackgroundColor3 = FromRGB(28, 28, 46);
+Frame_18.BorderSizePixel = 0;
+Frame_18.ZIndex = 2;
+Frame_18.Parent = Frame_16;
+Instance.new("UICorner", Frame_18).CornerRadius = UDim_New(1, 0);
+local Frame_19 = Instance.new("Frame");
+Frame_19.Size = UDim2_New(0.3, 0, 1, 0);
+Frame_19.BackgroundColor3 = FromRGB(100, 100, 220);
+Frame_19.BorderSizePixel = 0;
+Frame_19.ZIndex = 3;
+Frame_19.Parent = Frame_18;
+Instance.new("UICorner", Frame_19).CornerRadius = UDim_New(1, 0);
+local Frame_20 = Instance.new("Frame");
+Frame_20.Size = UDim2_New(0, 18, 0, 18);
+Frame_20.AnchorPoint = Vector2.new(0.5, 0.5);
+Frame_20.Position = UDim2_New(0.3, 0, 0.5, 0);
+Frame_20.BackgroundColor3 = FromRGB(180, 180, 255);
+Frame_20.BorderSizePixel = 0;
+Frame_20.ZIndex = 4;
+Frame_20.Parent = Frame_18;
+Instance.new("UICorner", Frame_20).CornerRadius = UDim_New(1, 0);
+Frame_18.InputBegan:Connect(function(a_3, b_3, c_3, ...)
+    local _ = Enum.UserInputType.MouseButton1;
+    local _ = Enum.UserInputType.Touch;
+end);
+local InputChanged = UserInputService.InputChanged;
+InputChanged:Connect(function(a_4, b_4, c_4, ...) end);
+local InputEnded = UserInputService.InputEnded;
+InputEnded:Connect(function(a_4, b_4, c_4, ...)
+    local _ = Enum.UserInputType.MouseButton1;
+    local _ = Enum.UserInputType.Touch;
+end);
+local Frame_21 = Instance.new("Frame");
+Frame_21.Size = UDim2_New(1, -14, 0, 1);
+Frame_21.Position = UDim2_New(0, 7, 0, 212);
+Frame_21.BackgroundColor3 = FromRGB(30, 30, 55);
+Frame_21.BorderSizePixel = 0;
+Frame_21.Parent = Frame_6;
+local Frame_22 = Instance.new("Frame");
+Frame_22.Size = UDim2_New(1, -14, 0, 18);
+Frame_22.Position = UDim2_New(0, 7, 0, 218);
+Frame_22.BackgroundTransparency = 1;
+Frame_22.Parent = Frame_6;
+local Frame_23 = Instance.new("Frame");
+Frame_23.Size = UDim2_New(0, 3, 0, 12);
+Frame_23.Position = UDim2_New(0, 0, 0.5, -6);
+Frame_23.BackgroundColor3 = FromRGB(100, 100, 200);
+Frame_23.BorderSizePixel = 0;
+Frame_23.Parent = Frame_22;
+Instance.new("UICorner", Frame_23).CornerRadius = UDim_New(1, 0);
+local NOTIFIER = Instance.new("TextLabel");
+NOTIFIER.Size = UDim2_New(1, -8, 1, 0);
+NOTIFIER.Position = UDim2_New(0, 8, 0, 0);
+NOTIFIER.BackgroundTransparency = 1;
+NOTIFIER.Text = "NOTIFIER";
+NOTIFIER.TextColor3 = FromRGB(120, 120, 190);
+NOTIFIER.TextSize = 8;
+local _ = Enum.Font.GothamBold;
+NOTIFIER.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+NOTIFIER.TextXAlignment = Enum.TextXAlignment.Left;
+NOTIFIER.Parent = Frame_22;
+local Frame_24 = Instance.new("Frame");
+Frame_24.Size = UDim2_New(1, -14, 0, 44);
+Frame_24.Position = UDim2_New(0, 7, 0, 240);
+Frame_24.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_24.BorderSizePixel = 0;
+Frame_24.Parent = Frame_6;
+Instance.new("UICorner", Frame_24).CornerRadius = UDim_New(0, 8);
+local UIStroke_5 = Instance.new("UIStroke");
+UIStroke_5.Color = FromRGB(35, 35, 60);
+UIStroke_5.Thickness = 1;
+UIStroke_5.Parent = Frame_24;
+local Spawn_Notifier = Instance.new("TextLabel");
+Spawn_Notifier.BackgroundTransparency = 1;
+Spawn_Notifier.Text = "Spawn Notifier";
+Spawn_Notifier.TextColor3 = FromRGB(220, 220, 230);
+Spawn_Notifier.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Spawn_Notifier.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Spawn_Notifier.TextXAlignment = Enum.TextXAlignment.Left;
+Spawn_Notifier.ZIndex = 2;
+Spawn_Notifier.Parent = Frame_24;
+Spawn_Notifier.Size = UDim2_New(1, -52, 0, 18);
+Spawn_Notifier.Position = UDim2_New(0, 10, 0, 8);
+local Alerts_On_New_Spawns_Only = Instance.new("TextLabel");
+Alerts_On_New_Spawns_Only.Size = UDim2_New(1, -52, 0, 13);
+Alerts_On_New_Spawns_Only.Position = UDim2_New(0, 10, 0, 26);
+Alerts_On_New_Spawns_Only.BackgroundTransparency = 1;
+Alerts_On_New_Spawns_Only.Text = "Alerts on new spawns only";
+Alerts_On_New_Spawns_Only.TextColor3 = FromRGB(80, 80, 110);
+Alerts_On_New_Spawns_Only.TextSize = 7;
+local _ = Enum.Font.Gotham;
+Alerts_On_New_Spawns_Only.Font = Enum.Font.Gotham;
+local _ = Enum.TextXAlignment.Left;
+Alerts_On_New_Spawns_Only.TextXAlignment = Enum.TextXAlignment.Left;
+Alerts_On_New_Spawns_Only.ZIndex = 2;
+Alerts_On_New_Spawns_Only.Parent = Frame_24;
+local TextButton_4 = Instance.new("TextButton");
+TextButton_4.Size = UDim2_New(0, 32, 0, 16);
+TextButton_4.Position = UDim2_New(1, -42, 0.5, -8);
+TextButton_4.BackgroundColor3 = FromRGB(35, 35, 55);
+TextButton_4.BorderSizePixel = 0;
+TextButton_4.Text = "";
+TextButton_4.ZIndex = 3;
+TextButton_4.Parent = Frame_24;
+Instance.new("UICorner", TextButton_4).CornerRadius = UDim_New(1, 0);
+local Frame_25 = Instance.new("Frame");
+Frame_25.Size = UDim2_New(0, 10, 0, 10);
+Frame_25.Position = UDim2_New(0, 3, 0.5, -5);
+Frame_25.BackgroundColor3 = FromRGB(120, 120, 150);
+Frame_25.BorderSizePixel = 0;
+Frame_25.ZIndex = 4;
+Frame_25.Parent = TextButton_4;
+Instance.new("UICorner", Frame_25).CornerRadius = UDim_New(1, 0);
+UDim2_New(0, 3, 0.5, -5);
+local Frame_26 = Instance.new("Frame");
+Frame_26.Size = UDim2_New(1, -14, 0, 1);
+Frame_26.Position = UDim2_New(0, 7, 0, 289);
+Frame_26.BackgroundColor3 = FromRGB(30, 30, 55);
+Frame_26.BorderSizePixel = 0;
+Frame_26.Parent = Frame_6;
+local Frame_27 = Instance.new("Frame");
+Frame_27.Size = UDim2_New(1, -14, 0, 18);
+Frame_27.Position = UDim2_New(0, 7, 0, 295);
+Frame_27.BackgroundTransparency = 1;
+Frame_27.Parent = Frame_6;
+local Frame_28 = Instance.new("Frame");
+Frame_28.Size = UDim2_New(0, 3, 0, 12);
+Frame_28.Position = UDim2_New(0, 0, 0.5, -6);
+Frame_28.BackgroundColor3 = FromRGB(100, 100, 200);
+Frame_28.BorderSizePixel = 0;
+Frame_28.Parent = Frame_27;
+Instance.new("UICorner", Frame_28).CornerRadius = UDim_New(1, 0);
+local FILTERS = Instance.new("TextLabel");
+FILTERS.Size = UDim2_New(1, -8, 1, 0);
+FILTERS.Position = UDim2_New(0, 8, 0, 0);
+FILTERS.BackgroundTransparency = 1;
+FILTERS.Text = "FILTERS";
+FILTERS.TextColor3 = FromRGB(120, 120, 190);
+FILTERS.TextSize = 8;
+local _ = Enum.Font.GothamBold;
+FILTERS.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+FILTERS.TextXAlignment = Enum.TextXAlignment.Left;
+FILTERS.Parent = Frame_27;
+local Frame_29 = Instance.new("Frame");
+Frame_29.Size = UDim2_New(1, -14, 0, 72);
+Frame_29.Position = UDim2_New(0, 7, 0, 317);
+Frame_29.BackgroundTransparency = 1;
+Frame_29.Parent = Frame_6;
+local Frame_30 = Instance.new("Frame");
+Frame_30.Size = UDim2_New(0, 1, 0.7, 0);
+Frame_30.Position = UDim2_New(0, 97.5, 0.15, 0);
+Frame_30.BackgroundColor3 = FromRGB(30, 30, 55);
+Frame_30.BorderSizePixel = 0;
+Frame_30.Parent = Frame_29;
+local Frame_31 = Instance.new("Frame");
+Frame_31.Size = UDim2_New(0, 96, 1, 0);
+Frame_31.Position = UDim2_New(0, 0, 0, 0);
+Frame_31.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_31.BorderSizePixel = 0;
+Frame_31.Parent = Frame_29;
+Instance.new("UICorner", Frame_31).CornerRadius = UDim_New(0, 9);
+local UIStroke_6 = Instance.new("UIStroke");
+UIStroke_6.Color = FromRGB(35, 35, 60);
+UIStroke_6.Thickness = 1;
+UIStroke_6.Parent = Frame_31;
+local Frame_32 = Instance.new("Frame");
+Frame_32.Size = UDim2_New(0, 5, 0, 5);
+Frame_32.Position = UDim2_New(0, 5, 0, 7);
+Frame_32.BackgroundColor3 = FromRGB(80, 80, 160);
+Frame_32.BorderSizePixel = 0;
+Frame_32.ZIndex = 2;
+Frame_32.Parent = Frame_31;
+Instance.new("UICorner", Frame_32).CornerRadius = UDim_New(1, 0);
+local Only_Secret = Instance.new("TextLabel");
+Only_Secret.Size = UDim2_New(1, -10, 0, 14);
+Only_Secret.Position = UDim2_New(0, 14, 0, 5);
+Only_Secret.BackgroundTransparency = 1;
+Only_Secret.Text = "Only Secret";
+Only_Secret.TextColor3 = FromRGB(220, 220, 235);
+Only_Secret.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Only_Secret.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Only_Secret.TextXAlignment = Enum.TextXAlignment.Left;
+local _ = Enum.TextTruncate.AtEnd;
+Only_Secret.TextTruncate = Enum.TextTruncate.AtEnd;
+Only_Secret.ZIndex = 2;
+Only_Secret.Parent = Frame_31;
+local Secret_Rarity = Instance.new("TextLabel");
+Secret_Rarity.Size = UDim2_New(1, -10, 0, 11);
+Secret_Rarity.Position = UDim2_New(0, 5, 0, 20);
+Secret_Rarity.BackgroundTransparency = 1;
+Secret_Rarity.Text = "Secret rarity";
+Secret_Rarity.TextColor3 = FromRGB(75, 75, 105);
+Secret_Rarity.TextSize = 7;
+local _ = Enum.Font.Gotham;
+Secret_Rarity.Font = Enum.Font.Gotham;
+local _ = Enum.TextXAlignment.Left;
+Secret_Rarity.TextXAlignment = Enum.TextXAlignment.Left;
+local _ = Enum.TextTruncate.AtEnd;
+Secret_Rarity.TextTruncate = Enum.TextTruncate.AtEnd;
+Secret_Rarity.ZIndex = 2;
+Secret_Rarity.Parent = Frame_31;
+local TextButton_5 = Instance.new("TextButton");
+TextButton_5.Size = UDim2_New(0, 32, 0, 16);
+TextButton_5.Position = UDim2_New(0.5, -16, 1, -21);
+TextButton_5.BackgroundColor3 = FromRGB(35, 35, 55);
+TextButton_5.BorderSizePixel = 0;
+TextButton_5.Text = "";
+TextButton_5.ZIndex = 3;
+TextButton_5.Parent = Frame_31;
+Instance.new("UICorner", TextButton_5).CornerRadius = UDim_New(1, 0);
+local Frame_33 = Instance.new("Frame");
+Frame_33.Size = UDim2_New(0, 10, 0, 10);
+Frame_33.Position = UDim2_New(0, 3, 0.5, -5);
+Frame_33.BackgroundColor3 = FromRGB(120, 120, 150);
+Frame_33.BorderSizePixel = 0;
+Frame_33.ZIndex = 4;
+Frame_33.Parent = TextButton_5;
+Instance.new("UICorner", Frame_33).CornerRadius = UDim_New(1, 0);
+UDim2_New(0, 3, 0.5, -5);
+local Frame_34 = Instance.new("Frame");
+Frame_34.Size = UDim2_New(0, 96, 1, 0);
+Frame_34.Position = UDim2_New(0, 100, 0, 0);
+Frame_34.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_34.BorderSizePixel = 0;
+Frame_34.Parent = Frame_29;
+Instance.new("UICorner", Frame_34).CornerRadius = UDim_New(0, 9);
+local UIStroke_7 = Instance.new("UIStroke");
+UIStroke_7.Color = FromRGB(35, 35, 60);
+UIStroke_7.Thickness = 1;
+UIStroke_7.Parent = Frame_34;
+local Frame_35 = Instance.new("Frame");
+Frame_35.Size = UDim2_New(0, 5, 0, 5);
+Frame_35.Position = UDim2_New(0, 5, 0, 7);
+Frame_35.BackgroundColor3 = FromRGB(80, 80, 160);
+Frame_35.BorderSizePixel = 0;
+Frame_35.ZIndex = 2;
+Frame_35.Parent = Frame_34;
+Instance.new("UICorner", Frame_35).CornerRadius = UDim_New(1, 0);
+local Only_Lucky_Block = Instance.new("TextLabel");
+Only_Lucky_Block.Size = UDim2_New(1, -10, 0, 14);
+Only_Lucky_Block.Position = UDim2_New(0, 14, 0, 5);
+Only_Lucky_Block.BackgroundTransparency = 1;
+Only_Lucky_Block.Text = "Only Lucky Block";
+Only_Lucky_Block.TextColor3 = FromRGB(220, 220, 235);
+Only_Lucky_Block.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Only_Lucky_Block.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Only_Lucky_Block.TextXAlignment = Enum.TextXAlignment.Left;
+local _ = Enum.TextTruncate.AtEnd;
+Only_Lucky_Block.TextTruncate = Enum.TextTruncate.AtEnd;
+Only_Lucky_Block.ZIndex = 2;
+Only_Lucky_Block.Parent = Frame_34;
+local Lucky_Blocks = Instance.new("TextLabel");
+Lucky_Blocks.Size = UDim2_New(1, -10, 0, 11);
+Lucky_Blocks.Position = UDim2_New(0, 5, 0, 20);
+Lucky_Blocks.BackgroundTransparency = 1;
+Lucky_Blocks.Text = "Lucky Blocks";
+Lucky_Blocks.TextColor3 = FromRGB(75, 75, 105);
+Lucky_Blocks.TextSize = 7;
+local _ = Enum.Font.Gotham;
+Lucky_Blocks.Font = Enum.Font.Gotham;
+local _ = Enum.TextXAlignment.Left;
+Lucky_Blocks.TextXAlignment = Enum.TextXAlignment.Left;
+local _ = Enum.TextTruncate.AtEnd;
+Lucky_Blocks.TextTruncate = Enum.TextTruncate.AtEnd;
+Lucky_Blocks.ZIndex = 2;
+Lucky_Blocks.Parent = Frame_34;
+local TextButton_6 = Instance.new("TextButton");
+TextButton_6.Size = UDim2_New(0, 32, 0, 16);
+TextButton_6.Position = UDim2_New(0.5, -16, 1, -21);
+TextButton_6.BackgroundColor3 = FromRGB(35, 35, 55);
+TextButton_6.BorderSizePixel = 0;
+TextButton_6.Text = "";
+TextButton_6.ZIndex = 3;
+TextButton_6.Parent = Frame_34;
+Instance.new("UICorner", TextButton_6).CornerRadius = UDim_New(1, 0);
+local Frame_36 = Instance.new("Frame");
+Frame_36.Size = UDim2_New(0, 10, 0, 10);
+Frame_36.Position = UDim2_New(0, 3, 0.5, -5);
+Frame_36.BackgroundColor3 = FromRGB(120, 120, 150);
+Frame_36.BorderSizePixel = 0;
+Frame_36.ZIndex = 4;
+Frame_36.Parent = TextButton_6;
+Instance.new("UICorner", Frame_36).CornerRadius = UDim_New(1, 0);
+UDim2_New(0, 3, 0.5, -5);
+local Frame_37 = Instance.new("Frame");
+Frame_37.Size = UDim2_New(1, -14, 0, 44);
+Frame_37.Position = UDim2_New(0, 7, 0, 394);
+Frame_37.BackgroundColor3 = FromRGB(16, 16, 26);
+Frame_37.BorderSizePixel = 0;
+Frame_37.Parent = Frame_6;
+Instance.new("UICorner", Frame_37).CornerRadius = UDim_New(0, 8);
+local UIStroke_8 = Instance.new("UIStroke");
+UIStroke_8.Color = FromRGB(35, 35, 60);
+UIStroke_8.Thickness = 1;
+UIStroke_8.Parent = Frame_37;
+local Only_OG = Instance.new("TextLabel");
+Only_OG.BackgroundTransparency = 1;
+Only_OG.Text = "Only OG";
+Only_OG.TextColor3 = FromRGB(220, 220, 230);
+Only_OG.TextSize = 9;
+local _ = Enum.Font.GothamBold;
+Only_OG.Font = Enum.Font.GothamBold;
+local _ = Enum.TextXAlignment.Left;
+Only_OG.TextXAlignment = Enum.TextXAlignment.Left;
+Only_OG.ZIndex = 2;
+Only_OG.Parent = Frame_37;
+Only_OG.Size = UDim2_New(1, -52, 0, 18);
+Only_OG.Position = UDim2_New(0, 10, 0, 8);
+local Show_Only_OG_Rarity = Instance.new("TextLabel");
+Show_Only_OG_Rarity.Size = UDim2_New(1, -52, 0, 13);
+Show_Only_OG_Rarity.Position = UDim2_New(0, 10, 0, 26);
+Show_Only_OG_Rarity.BackgroundTransparency = 1;
+Show_Only_OG_Rarity.Text = "Show only OG rarity";
+Show_Only_OG_Rarity.TextColor3 = FromRGB(80, 80, 110);
+Show_Only_OG_Rarity.TextSize = 7;
+local _ = Enum.Font.Gotham;
+Show_Only_OG_Rarity.Font = Enum.Font.Gotham;
+local _ = Enum.TextXAlignment.Left;
+Show_Only_OG_Rarity.TextXAlignment = Enum.TextXAlignment.Left;
+Show_Only_OG_Rarity.ZIndex = 2;
+Show_Only_OG_Rarity.Parent = Frame_37;
+local TextButton_7 = Instance.new("TextButton");
+TextButton_7.Size = UDim2_New(0, 32, 0, 16);
+TextButton_7.Position = UDim2_New(1, -42, 0.5, -8);
+TextButton_7.BackgroundColor3 = FromRGB(35, 35, 55);
+TextButton_7.BorderSizePixel = 0;
+TextButton_7.Text = "";
+TextButton_7.ZIndex = 3;
+TextButton_7.Parent = Frame_37;
+Instance.new("UICorner", TextButton_7).CornerRadius = UDim_New(1, 0);
+local Frame_38 = Instance.new("Frame");
+Frame_38.Size = UDim2_New(0, 10, 0, 10);
+Frame_38.Position = UDim2_New(0, 3, 0.5, -5);
+Frame_38.BackgroundColor3 = FromRGB(120, 120, 150);
+Frame_38.BorderSizePixel = 0;
+Frame_38.ZIndex = 4;
+Frame_38.Parent = TextButton_7;
+Instance.new("UICorner", Frame_38).CornerRadius = UDim_New(1, 0);
+UDim2_New(0, 3, 0.5, -5);
+local Star_Hub_V2_5_By_Star = Instance.new("TextLabel");
+Star_Hub_V2_5_By_Star.Size = UDim2_New(1, 0, 0, 20);
+Star_Hub_V2_5_By_Star.Position = UDim2_New(0, 0, 0, 447);
+Star_Hub_V2_5_By_Star.BackgroundTransparency = 1;
+Star_Hub_V2_5_By_Star.Text = "Star Hub  v2.5  •  by Star";
+Star_Hub_V2_5_By_Star.TextColor3 = FromRGB(40, 40, 70);
+Star_Hub_V2_5_By_Star.TextSize = 9;
+local _ = Enum.Font.Gotham;
+Star_Hub_V2_5_By_Star.Font = Enum.Font.Gotham;
+Star_Hub_V2_5_By_Star.Parent = Frame_6;
+Frame_2.InputBegan:Connect(function(a_5, b_5, c_5, ...)
+    local _ = Enum.UserInputType.MouseButton1;
+    local _ = Enum.UserInputType.Touch;
+end);
+InputChanged:Connect(function(a_6, b_6, c_6, ...) end);
+InputEnded:Connect(function(a_6, b_6, c_6, ...)
+    local _ = Enum.UserInputType.MouseButton1;
+    local _ = Enum.UserInputType.Touch;
+end);
+local SpawnNotifier = Instance.new("ScreenGui");
+SpawnNotifier.Name = "SpawnNotifier";
+SpawnNotifier.ResetOnSpawn = false;
+SpawnNotifier.IgnoreGuiInset = true;
+local _ = Enum.ZIndexBehavior.Sibling;
+SpawnNotifier.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
+SpawnNotifier.Parent = PlayerGui;
+local Frame_39 = Instance.new("Frame");
+Frame_39.Size = UDim2_New(0, 220, 1, 0);
+Frame_39.Position = UDim2_New(0.5, -110, 0, 8);
+Frame_39.BackgroundTransparency = 1;
+Frame_39.Parent = SpawnNotifier;
+local UIListLayout = Instance.new("UIListLayout");
+UIListLayout.Padding = UDim_New(0, 6);
+local _ = Enum.HorizontalAlignment.Center;
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+local _ = Enum.VerticalAlignment.Top;
+UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Top;
+local _ = Enum.FillDirection.Vertical;
+UIListLayout.FillDirection = Enum.FillDirection.Vertical;
+UIListLayout.Parent = Frame_39;
+TextButton_2.MouseButton1Click:Connect(function(a_7, b_7, c_7, ...)
+    TweenService:Create(TextButton_2, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(80, 180, 120)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_10, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(255, 255, 255),
+        ["Position"] = UDim2_New(1, -13, 0.5, -5)
+    }):Play();
+    r834:Play();
+    TweenService:Create(UIStroke_2, TweenInfo_New(0.18), {
+        ["Color"] = FromRGB(60, 140, 90)
+    }):Play();
+    r834:Play();
+    pcall(function(a_8, b_8, c_8, ...)
+        game:GetService("Lighting").GlobalShadows = false;
+    end);
+    for for_key_2, for_val_2 in workspace:FindFirstChild("BackroomsMap"):GetDescendants() do
+        for_val_2:IsA("BasePart");
+        for_val_2.CastShadow = false;
+        string.find(for_val_2.Name, "Wall", 1, true);
+        for_val_2.Transparency = 0.85;
+    end;
+end);
+TextButton_3.MouseButton1Click:Connect(function(a_9, b_9, c_9, ...)
+    TweenService:Create(TextButton_3, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(80, 180, 120)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_15, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(255, 255, 255),
+        ["Position"] = UDim2_New(1, -13, 0.5, -5)
+    }):Play();
+    r834:Play();
+    TweenService:Create(UIStroke_3, TweenInfo_New(0.18), {
+        ["Color"] = FromRGB(60, 140, 90)
+    }):Play();
+    r834:Play();
+    for for_key_3, for_val_3 in workspace:GetDescendants() do
+        for_val_3:IsA("Model");
+        for_val_3:IsA("Model");
+        Players:GetPlayerFromCharacter(for_val_3);
+    end;
+    DescendantAdded = workspace.DescendantAdded;
+    Heartbeat = RunService.Heartbeat;
+end);
+TextButton_4.MouseButton1Click:Connect(function(a_10, b_10, c_10, ...)
+    TweenService:Create(TextButton_4, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(80, 180, 120)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_25, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(255, 255, 255),
+        ["Position"] = UDim2_New(1, -13, 0.5, -5)
+    }):Play();
+    r834:Play();
+    TweenService:Create(UIStroke_5, TweenInfo_New(0.18), {
+        ["Color"] = FromRGB(60, 140, 90)
+    }):Play();
+    r834:Play();
+end);
+TextButton_5.MouseButton1Click:Connect(function(a_11, b_11, c_11, ...)
+    TweenService:Create(TextButton_5, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(80, 180, 120)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_33, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(255, 255, 255),
+        ["Position"] = UDim2_New(1, -13, 0.5, -5)
+    }):Play();
+    r834:Play();
+    TweenService:Create(UIStroke_6, TweenInfo_New(0.18), {
+        ["Color"] = FromRGB(60, 140, 90)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_32, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(60, 180, 110)
+    }):Play();
+    r834:Play();
+    local _ = Heartbeat:Connect(function(a_15, b_15, c_15, ...)
+        Character = LocalPlayer.Character;
+        Character:FindFirstChild("HumanoidRootPart");
+    end).Disconnect;
+    local _ = DescendantAdded:Connect(function(a_14, b_14, c_14, ...)
+        task.wait(0.5);
+        a_14:IsA("Model");
+        a_14:IsA("Model");
+        Players:GetPlayerFromCharacter(a_14);
+    end).Disconnect;
+    for for_key_4, for_val_4 in workspace:GetDescendants() do
+        for_val_4:IsA("Model");
+        for_val_4:IsA("Model");
+        Players:GetPlayerFromCharacter(for_val_4);
+    end;
+end);
+TextButton_6.MouseButton1Click:Connect(function(a_12, b_12, c_12, ...)
+    TweenService:Create(TextButton_6, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(80, 180, 120)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_36, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(255, 255, 255),
+        ["Position"] = UDim2_New(1, -13, 0.5, -5)
+    }):Play();
+    r834:Play();
+    TweenService:Create(UIStroke_7, TweenInfo_New(0.18), {
+        ["Color"] = FromRGB(60, 140, 90)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_35, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(60, 180, 110)
+    }):Play();
+    r834:Play();
+    local _ = Heartbeat:Connect(function(a_17, b_17, c_17, ...)
+        Character:FindFirstChild("HumanoidRootPart");
+    end).Disconnect;
+    local _ = DescendantAdded:Connect(function(a_16, b_16, c_16, ...)
+        task.wait(0.5);
+        a_16:IsA("Model");
+        a_16:IsA("Model");
+        Players:GetPlayerFromCharacter(a_16);
+    end).Disconnect;
+    for for_key_5, for_val_5 in workspace:GetDescendants() do
+        for_val_5:IsA("Model");
+        for_val_5:IsA("Model");
+        Players:GetPlayerFromCharacter(for_val_5);
+    end;
+end);
+TextButton_7.MouseButton1Click:Connect(function(a_13, b_13, c_13, ...)
+    TweenService:Create(TextButton_7, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(80, 180, 120)
+    }):Play();
+    r834:Play();
+    TweenService:Create(Frame_38, TweenInfo_New(0.18), {
+        ["BackgroundColor3"] = FromRGB(255, 255, 255),
+        ["Position"] = UDim2_New(1, -13, 0.5, -5)
+    }):Play();
+    r834:Play();
+    TweenService:Create(UIStroke_8, TweenInfo_New(0.18), {
+        ["Color"] = FromRGB(60, 140, 90)
+    }):Play();
+    r834:Play();
+    local _ = Heartbeat:Connect(function(a_19, b_19, c_19, ...)
+        Character:FindFirstChild("HumanoidRootPart");
+    end).Disconnect;
+    local _ = DescendantAdded:Connect(function(a_18, b_18, c_18, ...)
+        task.wait(0.5);
+        a_18:IsA("Model");
+        a_18:IsA("Model");
+        Players:GetPlayerFromCharacter(a_18);
+    end).Disconnect;
+    for for_key_6, for_val_6 in workspace:GetDescendants() do
+        for_val_6:IsA("Model");
+        for_val_6:IsA("Model");
+        Players:GetPlayerFromCharacter(for_val_6);
+    end;
+    DescendantAdded:Connect(function(a_20, b_20, c_20, ...)
+        task.wait(0.5);
+        a_20:IsA("Model");
+        a_20:IsA("Model");
+        Players:GetPlayerFromCharacter(a_20);
+    end);
+    Heartbeat:Connect(function(a_21, b_21, c_21, ...)
+        Character:FindFirstChild("HumanoidRootPart");
+    end);
+end);
+print("[StarHub] v2.5 Loaded! Mobile:", TouchEnabled);
