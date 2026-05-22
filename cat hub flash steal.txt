@@ -1,0 +1,453 @@
+-- [[(/ Services /)]]
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local ProximityPromptService = game:GetService("ProximityPromptService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- [[(/ Screen GUI /)]]
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "CatHUB_Flash"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.Parent = playerGui
+
+-- [[(/ Steal Progress Bar /)]]
+local StealBarBG = Instance.new("Frame")
+StealBarBG.Name = "StealBarBG"
+StealBarBG.Size = UDim2.new(0, 220, 0, 16)
+StealBarBG.Position = UDim2.new(0.5, -110, 1, -24)
+StealBarBG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+StealBarBG.BackgroundTransparency = 0
+StealBarBG.BorderSizePixel = 0
+StealBarBG.Parent = ScreenGui
+
+local StealBarBGCorner = Instance.new("UICorner")
+StealBarBGCorner.CornerRadius = UDim.new(0, 6)
+StealBarBGCorner.Parent = StealBarBG
+
+local StealBarStroke = Instance.new("UIStroke")
+StealBarStroke.Color = Color3.fromRGB(180, 180, 180)
+StealBarStroke.Thickness = 1.5
+StealBarStroke.Parent = StealBarBG
+
+local StealBarInner = Instance.new("Frame")
+StealBarInner.Name = "Inner"
+StealBarInner.Size = UDim2.new(1, -8, 1, -6)
+StealBarInner.Position = UDim2.new(0, 4, 0, 3)
+StealBarInner.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+StealBarInner.BorderSizePixel = 0
+StealBarInner.Parent = StealBarBG
+
+local StealBarInnerCorner = Instance.new("UICorner")
+StealBarInnerCorner.CornerRadius = UDim.new(1, 0)
+StealBarInnerCorner.Parent = StealBarInner
+
+local StealBarFill = Instance.new("Frame")
+StealBarFill.Name = "Fill"
+StealBarFill.Size = UDim2.new(0, 0, 1, 0)
+StealBarFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+StealBarFill.BorderSizePixel = 0
+StealBarFill.Parent = StealBarInner
+
+local StealFillCorner = Instance.new("UICorner")
+StealFillCorner.CornerRadius = UDim.new(1, 0)
+StealFillCorner.Parent = StealBarFill
+
+-- [[(/ Main Frame /)]]
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 200, 0, 130)
+Main.Position = UDim2.new(0.5, -100, 0.5, -65)
+Main.BackgroundColor3 = Color3.new(0, 0, 0)
+Main.BackgroundTransparency = 0.2
+Main.BorderSizePixel = 0
+Main.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
+
+-- [[(/ Animated Stroke /)]]
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.new(1, 1, 1)
+MainStroke.Thickness = 1.3
+MainStroke.Parent = Main
+
+local StrokeGradient = Instance.new("UIGradient")
+StrokeGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
+    ColorSequenceKeypoint.new(0.25, Color3.new(0, 0, 0)),
+    ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
+    ColorSequenceKeypoint.new(0.75, Color3.new(0, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.new(1, 1, 1)),
+})
+StrokeGradient.Parent = MainStroke
+
+task.spawn(function()
+    while StrokeGradient and StrokeGradient.Parent do
+        StrokeGradient.Rotation = (StrokeGradient.Rotation + 0.5) % 360
+        task.wait()
+    end
+end)
+
+-- [[(/ Title Bar /)]]
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 32)
+TitleBar.BackgroundColor3 = Color3.new(0, 0, 0)
+TitleBar.BackgroundTransparency = 0.5
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = Main
+
+local TitleBarCorner = Instance.new("UICorner")
+TitleBarCorner.CornerRadius = UDim.new(0, 12)
+TitleBarCorner.Parent = TitleBar
+
+local TitleSep = Instance.new("Frame")
+TitleSep.Name = "Separator"
+TitleSep.Size = UDim2.new(1, 0, 0, 1)
+TitleSep.Position = UDim2.new(0, 0, 1, 0)
+TitleSep.BackgroundColor3 = Color3.new(1, 1, 1)
+TitleSep.BorderSizePixel = 0
+TitleSep.Parent = TitleBar
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Name = "Title"
+TitleLabel.Size = UDim2.new(1, -20, 1, 0)
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "CatHUB Flash Steal"
+TitleLabel.TextColor3 = Color3.new(1, 1, 1)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 14
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = TitleBar
+
+-- [[(/ Dragging /)]]
+do
+    local dragging = false
+    local dragInput, dragStart, startPos
+
+    TitleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Main.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+end
+
+-- [[(/ Content Area /)]]
+local Content = Instance.new("Frame")
+Content.Name = "Content"
+Content.Size = UDim2.new(1, -20, 1, -42)
+Content.Position = UDim2.new(0, 10, 0, 37)
+Content.BackgroundTransparency = 1
+Content.BorderSizePixel = 0
+Content.Parent = Main
+
+-- [[(/ Flash TP Button /)]]
+local FlashButton = Instance.new("TextButton")
+FlashButton.Name = "FlashTPButton"
+FlashButton.Size = UDim2.new(1, 0, 0, 36)
+FlashButton.Position = UDim2.new(0, 0, 0, 0)
+FlashButton.BackgroundColor3 = Color3.new(0.117647, 0.117647, 0.117647)
+FlashButton.AutoButtonColor = false
+FlashButton.Text = ""
+FlashButton.BorderSizePixel = 0
+FlashButton.Parent = Content
+
+local FlashButtonCorner = Instance.new("UICorner")
+FlashButtonCorner.CornerRadius = UDim.new(0, 8)
+FlashButtonCorner.Parent = FlashButton
+
+local FlashLabel = Instance.new("TextLabel")
+FlashLabel.Name = "Label"
+FlashLabel.Size = UDim2.new(1, -12, 1, 0)
+FlashLabel.Position = UDim2.new(0, 12, 0, 0)
+FlashLabel.BackgroundTransparency = 1
+FlashLabel.Text = "FLASH TP: OFF"
+FlashLabel.TextColor3 = Color3.new(1, 1, 1)
+FlashLabel.Font = Enum.Font.GothamBold
+FlashLabel.TextSize = 12
+FlashLabel.TextXAlignment = Enum.TextXAlignment.Left
+FlashLabel.Parent = FlashButton
+
+FlashButton.MouseEnter:Connect(function()
+    TweenService:Create(FlashButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.new(0.18, 0.18, 0.18)}):Play()
+end)
+FlashButton.MouseLeave:Connect(function()
+    TweenService:Create(FlashButton, TweenInfo.new(0.15), {BackgroundColor3 = Color3.new(0.117647, 0.117647, 0.117647)}):Play()
+end)
+
+-- [[(/ Trigger Slider /)]]
+local SliderArea = Instance.new("Frame")
+SliderArea.Name = "SliderArea"
+SliderArea.Size = UDim2.new(1, 0, 0, 40)
+SliderArea.Position = UDim2.new(0, 0, 0, 42)
+SliderArea.BackgroundTransparency = 1
+SliderArea.BorderSizePixel = 0
+SliderArea.Parent = Content
+
+local TriggerLabel = Instance.new("TextLabel")
+TriggerLabel.Name = "TriggerLabel"
+TriggerLabel.Size = UDim2.new(1, 0, 0, 16)
+TriggerLabel.BackgroundTransparency = 1
+TriggerLabel.Text = "TRIGGER: 100%"
+TriggerLabel.TextColor3 = Color3.new(1, 1, 1)
+TriggerLabel.Font = Enum.Font.GothamBold
+TriggerLabel.TextSize = 10
+TriggerLabel.TextXAlignment = Enum.TextXAlignment.Left
+TriggerLabel.Parent = SliderArea
+
+local SliderTrack = Instance.new("Frame")
+SliderTrack.Name = "Track"
+SliderTrack.Size = UDim2.new(1, 0, 0, 6)
+SliderTrack.Position = UDim2.new(0, 0, 0, 20)
+SliderTrack.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+SliderTrack.BorderSizePixel = 0
+SliderTrack.Parent = SliderArea
+
+local TrackCorner = Instance.new("UICorner")
+TrackCorner.CornerRadius = UDim.new(1, 0)
+TrackCorner.Parent = SliderTrack
+
+local SliderFill = Instance.new("Frame")
+SliderFill.Name = "Fill"
+SliderFill.Size = UDim2.new(1, 0, 1, 0)
+SliderFill.BackgroundColor3 = Color3.new(1, 1, 1)
+SliderFill.BorderSizePixel = 0
+SliderFill.Parent = SliderTrack
+
+local FillCorner = Instance.new("UICorner")
+FillCorner.CornerRadius = UDim.new(1, 0)
+FillCorner.Parent = SliderFill
+
+local SliderKnob = Instance.new("TextButton")
+SliderKnob.Name = "Knob"
+SliderKnob.Size = UDim2.new(0, 14, 0, 14)
+SliderKnob.Position = UDim2.new(1, 0, 0.5, 0)
+SliderKnob.AnchorPoint = Vector2.new(0.5, 0.5)
+SliderKnob.BackgroundColor3 = Color3.new(1, 1, 1)
+SliderKnob.BorderSizePixel = 0
+SliderKnob.Text = ""
+SliderKnob.ZIndex = 2
+SliderKnob.Parent = SliderTrack
+
+local KnobCorner = Instance.new("UICorner")
+KnobCorner.CornerRadius = UDim.new(1, 0)
+KnobCorner.Parent = SliderKnob
+
+-- [[(/ Loading Bar /)]]
+local LoadingBar = Instance.new("Frame")
+LoadingBar.Name = "LoadingBar"
+LoadingBar.Size = UDim2.new(0, 200, 0, 20)
+LoadingBar.Position = UDim2.new(0.5, -100, 1, -25)
+LoadingBar.BackgroundColor3 = Color3.new(0, 0, 0)
+LoadingBar.BackgroundTransparency = 0.2
+LoadingBar.BorderSizePixel = 0
+LoadingBar.Visible = true
+LoadingBar.Parent = ScreenGui
+
+local LoadingCorner = Instance.new("UICorner")
+LoadingCorner.CornerRadius = UDim.new(0, 6)
+LoadingCorner.Parent = LoadingBar
+
+local LoadingStroke = Instance.new("UIStroke")
+LoadingStroke.Color = Color3.new(1, 1, 1)
+LoadingStroke.Thickness = 1.2
+LoadingStroke.Parent = LoadingBar
+
+local LoadTrack = Instance.new("Frame")
+LoadTrack.Name = "Track"
+LoadTrack.Size = UDim2.new(0.9, 0, 0, 8)
+LoadTrack.Position = UDim2.new(0.05, 0, 0.5, -4)
+LoadTrack.BackgroundColor3 = Color3.new(0.156863, 0.156863, 0.156863)
+LoadTrack.BorderSizePixel = 0
+LoadTrack.Parent = LoadingBar
+
+local LoadTrackCorner = Instance.new("UICorner")
+LoadTrackCorner.CornerRadius = UDim.new(1, 0)
+LoadTrackCorner.Parent = LoadTrack
+
+local LoadFill = Instance.new("Frame")
+LoadFill.Name = "Fill"
+LoadFill.Size = UDim2.new(0, 0, 1, 0)
+LoadFill.BackgroundColor3 = Color3.new(1, 1, 1)
+LoadFill.BorderSizePixel = 0
+LoadFill.Parent = LoadTrack
+
+local LoadFillCorner = Instance.new("UICorner")
+LoadFillCorner.CornerRadius = UDim.new(1, 0)
+LoadFillCorner.Parent = LoadFill
+
+task.spawn(function()
+    local tween = TweenService:Create(LoadFill, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(1, 0, 1, 0)
+    })
+    tween:Play()
+    tween.Completed:Wait()
+    task.wait(0.3)
+    local fadeTween = TweenService:Create(LoadingBar, TweenInfo.new(0.4), {BackgroundTransparency = 1})
+    fadeTween:Play()
+    TweenService:Create(LoadingStroke, TweenInfo.new(0.4), {Transparency = 1}):Play()
+    TweenService:Create(LoadFill, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(LoadTrack, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
+    fadeTween.Completed:Wait()
+    LoadingBar.Visible = false
+end)
+
+-- [[(/ Flash TP Logic /)]]
+local flashEnabled = true
+local sliderValue = 1
+local manualOverride = false
+local triggerBump = false
+local activeTriggers = {}
+
+FlashButton.MouseButton1Click:Connect(function()
+    flashEnabled = not flashEnabled
+    if flashEnabled then
+        FlashLabel.Text = "FLASH TP: ON"
+        FlashButton.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    else
+        FlashLabel.Text = "FLASH TP: OFF"
+        FlashButton.BackgroundColor3 = Color3.new(0.117647, 0.117647, 0.117647)
+    end
+end)
+
+-- [[(/ Slider Dragging /)]]
+do
+    local sliderDragging = false
+
+    local function updateSlider(inputX)
+        local trackAbsPos = SliderTrack.AbsolutePosition.X
+        local trackAbsSize = SliderTrack.AbsoluteSize.X
+        local relativeX = math.clamp((inputX - trackAbsPos) / trackAbsSize, 0, 1)
+        manualOverride = true
+        sliderValue = relativeX
+        SliderFill.Size = UDim2.new(relativeX, 0, 1, 0)
+        SliderKnob.Position = UDim2.new(relativeX, 0, 0.5, 0)
+        TriggerLabel.Text = "TRIGGER: " .. math.floor(relativeX * 100) .. "%"
+    end
+
+    SliderKnob.MouseButton1Down:Connect(function()
+        sliderDragging = true
+    end)
+
+    SliderTrack.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            sliderDragging = true
+            updateSlider(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if sliderDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            updateSlider(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            sliderDragging = false
+        end
+    end)
+end
+
+-- [[(/ Auto Ping Slider /)]]
+local function getPingBase(ping)
+    if ping <= 30 then return 0.91
+    elseif ping <= 70 then return 0.92
+    elseif ping <= 120 then return 0.93
+    else return 0.94 end
+end
+
+local function updateSliderVisual(v)
+    sliderValue = v
+    SliderFill.Size = UDim2.new(v, 0, 1, 0)
+    SliderKnob.Position = UDim2.new(v, 0, 0.5, 0)
+    TriggerLabel.Text = "TRIGGER: " .. math.floor(v * 100) .. "%"
+end
+
+RunService.Heartbeat:Connect(function()
+    if not manualOverride then
+        local ping = player:GetNetworkPing() * 1000
+        local base = getPingBase(ping)
+        updateSliderVisual(triggerBump and base + 0.01 or base)
+    end
+end)
+
+-- [[(/ Flash TP Core /)]]
+ProximityPromptService.PromptButtonHoldBegan:Connect(function(prompt)
+    if not flashEnabled then return end
+    if activeTriggers[prompt] then return end
+    activeTriggers[prompt] = true
+    local start = os.clock()
+    local fired = false
+
+    StealBarFill.BackgroundTransparency = 0
+    StealBarBG.BackgroundTransparency = 0
+
+    local conn
+    conn = RunService.PreRender:Connect(function()
+        if not prompt or not prompt.Parent then
+            conn:Disconnect()
+            activeTriggers[prompt] = nil
+            TweenService:Create(StealBarFill, TweenInfo.new(0.3), {Size = UDim2.new(0, 0, 1, 0)}):Play()
+            return
+        end
+
+        local progress = math.clamp((os.clock() - start) / prompt.HoldDuration, 0, 1)
+        StealBarFill.Size = UDim2.new(progress, 0, 1, 0)
+
+        if not fired and progress >= sliderValue then
+            fired = true
+            conn:Disconnect()
+            activeTriggers[prompt] = nil
+            triggerBump = not triggerBump
+            local char = player.Character
+            local tool = char and char:FindFirstChildOfClass("Tool")
+            if tool then tool:Activate() end
+
+            StealBarFill.Size = UDim2.new(1, 0, 1, 0)
+            task.delay(0.2, function()
+                TweenService:Create(StealBarFill, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                    Size = UDim2.new(0, 0, 1, 0)
+                }):Play()
+            end)
+        end
+    end)
+
+    prompt.PromptButtonHoldEnded:Connect(function()
+        if not fired then
+            conn:Disconnect()
+            activeTriggers[prompt] = nil
+            TweenService:Create(StealBarFill, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Size = UDim2.new(0, 0, 1, 0)
+            }):Play()
+        end
+    end)
+end)
